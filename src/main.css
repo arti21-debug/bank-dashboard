@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-lato: "Lato", sans-serif;
+
+  --color-dark-blue: #343C6A;
+  --color-gray-blue: #1814F3;
+  --color-grey: #718EBF;
+  --color-light-grey: #F5F7FA;
+  --color-black: #232323;
+  --color-background-white: #fff;
+  --color-background-gray: #DFE5EE;
+}
+
+@import "./index.css";
+@import "./normalize.css";
+@import "./fonts.css";

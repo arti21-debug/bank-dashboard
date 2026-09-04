@@ -1,0 +1,38 @@
+body {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  background: var(--color-background-gray);
+  color: var(--color-dark-blue);
+}
+
+.container {
+  width: min(100% - 80px, 1110px);
+  margin: 0 auto;
+}
+
+.scrollbar {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #718EBF transparent;
+}
+
+.scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #718EBF;
+  border-radius: 9999px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5d70a0;
+}
+
+svg * {
+  outline: none !important;
+}
