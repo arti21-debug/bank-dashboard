@@ -107,7 +107,7 @@ export default function Dashboard() {
     useMakeTransfer(selectedUser, amountValue, cards);
 
   // recent transaction block - sort latest
-  const sortedTransactions = activeCard.transactions
+  const sortedTransactions = [...activeCard.transactions]
     .sort((a, b) => b.date - a.date)
     .slice(0, 3);
   console.log(sortedTransactions);

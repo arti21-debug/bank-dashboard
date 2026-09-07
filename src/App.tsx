@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
 import "./main.css";
-import TransactionPage from "./components/Transactions/TransactionPage.js";
+import TransactionPage from "./components/Transactions/TransactionsPage.js";
 
 export default function App() {
   return (

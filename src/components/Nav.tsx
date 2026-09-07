@@ -20,7 +20,6 @@ import vector8Active from "../icons/nav-icons/active/vector-8-active.svg";
 import vector9 from "../icons/nav-icons/vector-9.svg";
 import vector9Active from "../icons/nav-icons/active/vector-9-active.svg";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 export const NAV_VECTORS = {
   Dashboard: { vector: vector1, active: vector1Active },

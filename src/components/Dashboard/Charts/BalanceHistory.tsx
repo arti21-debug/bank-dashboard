@@ -87,7 +87,18 @@ export default function BalanceHistory({ activeCard }: BalanceProps) {
           vertical={(props: any) => {
             // скрываем последнюю вертикальную линию
             if (props.index === data.length - 1) return <line />;
-            return <line {...props} />;
+            return (
+              <line
+                key={props.index}
+                x1={props.x1}
+                y1={props.y1}
+                x2={props.x2}
+                y2={props.y2}
+                stroke={props.stroke}
+                strokeDasharray={props.strokeDasharray}
+                strokeWidth={props.strokeWidth}
+              />
+            );
           }}
         />
         <XAxis

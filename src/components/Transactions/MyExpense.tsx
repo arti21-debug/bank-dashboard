@@ -45,10 +45,11 @@ export default function MyExpense({ activeCard }: ExpenseProps) {
   }, []);
 
   const currentMonth = new Date().getMonth();
-  const closestMonths = Array.from({ length: 7 }, (_, i) => {
+  const closestMonths = Array.from({ length: 6 }, (_, i) => {
     return months[(currentMonth - (5 - i) + 12) % 12];
   });
 
+  // подготовка данных
   const data = closestMonths.map((m, mIndex) => {
     const monthIndex = (currentMonth - (5 - mIndex) + 12) % 12;
 
@@ -62,14 +63,13 @@ export default function MyExpense({ activeCard }: ExpenseProps) {
 
     return {
       name: m,
-      // 1. минимальный размер бара — если 0 ставим маленькое значение
-      // чтобы бар был виден но не искажал реальные данные
+      // минимальный размер бара
       activity: activity === 0 ? 50 : activity,
       realActivity: activity, // реальное значение для tooltip
     };
-  }).slice(0, -1);
+  });
 
-  // 3. кастомный tooltip с позицией точно над баром
+  // кастомный tooltip с позицией точно над баром
   const CustomTooltip = ({ active, payload, coordinate, viewBox }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -93,7 +93,6 @@ export default function MyExpense({ activeCard }: ExpenseProps) {
   };
 
   return (
-    // 2. адаптив — overflow-hidden на обёртке чтобы chart не вылезал
     <div className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart

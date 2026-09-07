@@ -4,14 +4,11 @@ import _002notification1 from "../icons/header-icons/002-notification-1.svg";
 import MaskGroup from "../icons/header-icons/Mask Group.svg";
 import { useState } from "react";
 import { NAV_VECTORS } from "./Nav";
-import { genereteDemoData } from "../utilits/getMockTransactions";
-import { useCardsStore } from "../store/useCardsStore";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isBurgOpen, setIsBurgOpen] = useState(false);
-
-  const addMockTrans = useCardsStore((state) => state.addMockTransactions);
-  const cards = useCardsStore((state) => state.cards);
+  const navigate = useNavigate();
 
   return (
     <header className="bg-background-white flex items-center justify-between min-h-25 w-full max-[580px]:flex-col max-[580px]:min-h-35 max-[580px]:justify-center max-[580px]:gap-6.25">
@@ -22,7 +19,7 @@ export default function Header() {
           className="relative hidden max-[960px]:block"
         >
           <button
-            className="flex w-[clamp(1.875rem,1.739rem+0.68vw,2.25rem)] flex-col gap-1.5 p-2 max-[400px]:gap-1"
+            className="flex w-[clamp(1.875rem,1.739rem+0.68vw,2.25rem)] flex-col gap-1.5 p-2 cursor-pointer max-[400px]:gap-1"
             aria-label={isBurgOpen ? "Close menu" : "Open menu"}
             aria-expanded={isBurgOpen}
           >
@@ -42,8 +39,14 @@ export default function Header() {
           {isBurgOpen && (
             <ul className="flex flex-col items-center gap-3 absolute z-50 w-40 py-5 rounded-md bg-[#6f7b8e] max-[480px]:w-35 max-[480px]:text-sm max-[480px]:gap-2 max-[480px]:py-3">
               {Object.entries(NAV_VECTORS).map(([el, _]) => (
-                <li className="whitespace-nowrap text-[#B1B1B1]">
-                  <button className="font-base transition duration-300 hover:text-[#ddd8d8]">
+                <li
+                key={el}
+                  onClick={() => {
+                    navigate(`/${el !== "Dashboard" ? el : "/"}`);
+                  }}
+                  className="whitespace-nowrap text-[#B1B1B1]"
+                >
+                  <button className="cursor-pointer font-base transition duration-300 hover:text-[#ddd8d8]">
                     {el}
                   </button>
                 </li>
@@ -55,16 +58,6 @@ export default function Header() {
         <h1 className="text-[28px] font-semibold max-[1024px]:text-[25px] max-[400px]:text-xl">
           Overview
         </h1>
-        <button onClick={() => {
-          const data = genereteDemoData();
-          const arr = Math.ceil(data.length / 2);
-          const first = data.slice(0, arr);
-          const second = data.slice(arr);
-
-          addMockTrans(1, first);
-          addMockTrans(2, second);
-          console.log(cards);
-        }} className="border p-1">generete data</button>
         <div className="flex items-center gap-7.5">
           <div className="flex justify-between gap-3.75 bg-light-grey rounded-full w-[clamp(12.5rem,11.25rem+6.25vw,15.938rem)] max-h-12.5 max-[580px]:hidden focus-within:outline focus-within:outline-grey">
             <img
