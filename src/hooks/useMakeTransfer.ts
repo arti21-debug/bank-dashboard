@@ -40,6 +40,7 @@ export default function useMakeTransfer(
         category: "Transfer",
         amount: Number(amountValue),
         date: Date.now(),
+        status: "Completed"
       });
 
       setIsPopOpen(true);

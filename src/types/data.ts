@@ -3,6 +3,7 @@ export interface Transaction {
   category: string;
   amount: number;
   date: number;
+  status: string;
 }
 
 export interface Card {

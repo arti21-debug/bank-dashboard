@@ -39,7 +39,7 @@ const users = [
   MaskGroup_3,
 ];
 
-const transactionIcons = [
+export const transactionIcons = [
   {
     type: "Transfer",
     icon: (
@@ -110,7 +110,6 @@ export default function Dashboard() {
   const sortedTransactions = [...activeCard.transactions]
     .sort((a, b) => b.date - a.date)
     .slice(0, 3);
-  console.log(sortedTransactions);
 
   // date from timestamp
   const recentTransactions = sortedTransactions.map((t) => {
@@ -140,43 +139,49 @@ export default function Dashboard() {
                   <h2 className="text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                     Recent Transaction
                   </h2>
-                  <div className="bg-background-white w-full h-58.75 rounded-3xl max-[1200px]:h-42.5">
-                    <ul className="flex flex-col justify-between gap-2.5 p-6.25 max-[1200px]:p-4 max-[1200px]:gap-2">
-                      {recentTransactions.map((tran, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center justify-between gap-4"
-                        >
-                          {transactionIcons.map(
-                            (icon, i) =>
-                              icon.type === tran.category && (
-                                <div
-                                  key={i}
-                                  className={`relative w-13.75 h-13.75 max-[1200px]:w-10 max-[1200px]:h-10 shrink-0 rounded-full`}
-                                  style={{ backgroundColor: icon.bg }}
-                                >
-                                  {icon.icon}
-                                </div>
-                              ),
-                          )}
-                          <div className="flex flex-col min-w-0 flex-1 max-[770px]:items-center max-[380px]:items-stretch">
-                            <div className="text-black font-medium max-[1200px]:text-sm truncate">
-                              {tran.description}
-                            </div>
-                            <div className="text-grey text-[15px] pt-1.75 max-[1200px]:text-xs truncate">
-                              {tran.date}
-                            </div>
-                          </div>
-                          <div
-                            className={`${tran.amount < 0 ? "text-[#FF4B4A]" : "text-[#41D4A8]"} font-medium shrink-0 max-[1200px]:text-sm`}
+                  <div className="relative bg-background-white w-full h-58.75 rounded-3xl max-[1200px]:h-42.5">
+                    {recentTransactions.length > 0 ? (
+                      <ul className="flex flex-col justify-between gap-2.5 p-6.25 max-[1200px]:p-4 max-[1200px]:gap-2">
+                        {recentTransactions.map((tran, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center justify-between gap-4"
                           >
-                            {tran.amount < 0
-                              ? `-$${String(tran.amount).slice(1)}`
-                              : `+$${tran.amount}`}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+                            {transactionIcons.map(
+                              (icon, i) =>
+                                icon.type === tran.category && (
+                                  <div
+                                    key={i}
+                                    className={`relative w-13.75 h-13.75 max-[1200px]:w-10 max-[1200px]:h-10 shrink-0 rounded-full`}
+                                    style={{ backgroundColor: icon.bg }}
+                                  >
+                                    {icon.icon}
+                                  </div>
+                                ),
+                            )}
+                            <div className="flex flex-col min-w-0 flex-1 max-[770px]:items-center max-[380px]:items-stretch">
+                              <div className="text-black font-medium max-[1200px]:text-sm truncate">
+                                {tran.description}
+                              </div>
+                              <div className="text-grey text-[15px] pt-1.75 max-[1200px]:text-xs truncate">
+                                {tran.date}
+                              </div>
+                            </div>
+                            <div
+                              className={`${tran.amount < 0 ? "text-[#FF4B4A]" : "text-[#41D4A8]"} font-medium shrink-0 max-[1200px]:text-sm`}
+                            >
+                              {tran.amount < 0
+                                ? `-$${String(tran.amount).slice(1)}`
+                                : `+$${tran.amount}`}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="absolute top-1/2 left-1/2 -translate-1/2 whitespace-nowrap font-medium text-lg text-blue-700 max-[1024px]:text-base">
+                        No transactions yet...
+                      </div>
+                    )}
                   </div>
                 </div>
               </section>
@@ -203,8 +208,14 @@ export default function Dashboard() {
                   <h2 className="text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                     Expense Statistics
                   </h2>
-                  <div className="bg-background-white w-full h-80.5 rounded-3xl max-[400px]:w-full">
-                    <ExpenseStat activeCard={activeCard} />
+                  <div className="relative bg-background-white w-full h-80.5 rounded-3xl max-[400px]:w-full">
+                    {recentTransactions.length > 0 ? (
+                      <ExpenseStat activeCard={activeCard} />
+                    ) : (
+                      <div className="absolute top-1/2 left-1/2 -translate-1/2 whitespace-nowrap font-medium text-lg text-blue-700 max-[1024px]:text-base">
+                        No transactions yet...
+                      </div>
+                    )}
                   </div>
                 </div>
               </section>

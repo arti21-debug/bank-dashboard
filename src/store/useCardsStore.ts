@@ -52,8 +52,6 @@ export const useCardsStore = create<CardsStore>()(
               : card,
           ),
         })),
-
-      addFounds: (cardId, f) => set((state) => ({})),
     }),
     { name: "cards" },
   ),

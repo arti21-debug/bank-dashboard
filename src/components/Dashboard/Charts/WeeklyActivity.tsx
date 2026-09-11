@@ -5,6 +5,7 @@ import {
   YAxis,
   CartesianGrid,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 import { Card } from "../../../types/data";
 import { useEffect, useState } from "react";
@@ -70,16 +71,13 @@ export default function WeeklyActivity({ activeCard }: ActivityProps) {
             tick={{ fill: "#718EBF", fontSize }}
             tickMargin={10}
           />
-          <Bar
-            dataKey="deposit"
-            fill="#16DBCC"
-            radius={[10, 10, 10, 10]}
-          />
-          <Bar
-            dataKey="withdraw"
-            fill="#1814F3"
-            radius={[10, 10, 10, 10]}
-          />
+          {data.some(
+            (item) => item.deposit !== 0 || item.withdraw !== 0,
+          ) ? null : (
+            <ReferenceLine y={0} stroke="#1814F3" strokeWidth={2} />
+          )}
+          <Bar dataKey="deposit" fill="#16DBCC" radius={[10, 10, 10, 10]} />
+          <Bar dataKey="withdraw" fill="#1814F3" radius={[10, 10, 10, 10]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

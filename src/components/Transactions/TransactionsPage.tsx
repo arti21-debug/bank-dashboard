@@ -90,13 +90,13 @@ export default function TransactionPage() {
                 Recent Transactions
               </h2>
               <div className="pt-6.75 max-[1024px]:pt-4.5">
-                <div className="relative flex gap-20.5 font-medium border-b border-[#EBEEF2] max-[1024px]:gap-15 max-[1024px]:text-[13px] max-[550px]:flex-col max-[550px]:gap-5 max-[550px]:border-none">
+                <div className="relative flex gap-20.5 font-medium border-b border-[#EBEEF2] max-[1024px]:gap-15 max-[1024px]:text-[13px] max-[550px]:flex-col max-[550px]:gap-5 max-[550px]:border-none max-[550px]:w-fit max-[550px]:mx-auto">
                   <button
                     onClick={() => {
                       setActiveTransactions("all");
                       reset();
                     }}
-                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "all" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:border-none max-[550px]:p-0`}
+                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "all" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
                   >
                     All Transactions
                   </button>
@@ -105,7 +105,7 @@ export default function TransactionPage() {
                       setActiveTransactions("income");
                       reset();
                     }}
-                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "income" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:border-none max-[550px]:p-0`}
+                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "income" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
                   >
                     Income
                   </button>
@@ -114,7 +114,7 @@ export default function TransactionPage() {
                       setActiveTransactions("expense");
                       reset();
                     }}
-                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "expense" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:border-none max-[550px]:p-0`}
+                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "expense" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
                   >
                     Expense
                   </button>
@@ -133,9 +133,9 @@ export default function TransactionPage() {
                     + generete data
                   </button>
                 </div>
-                <div className="w-full h-100 mt-6.25 mb-7.5 rounded-2xl bg-white overflow-hidden">
-                  <div className="h-full overflow-y-auto">
-                    <table className="w-full border-collapse min-w-175">
+                <div className="relative w-full h-100 mt-6.25 mb-7.5 rounded-2xl bg-white overflow-y-auto max-[550px]:h-75">
+                  {transactions.length > 0 ? (
+                    <table className="relative w-full border-collapse min-w-175 max-[550px]:hidden">
                       <thead className="sticky top-0 bg-white z-10">
                         <tr className="border-b border-[#EBEEF2] whitespace-nowrap max-[1024px]:text-[13px]">
                           {[
@@ -195,7 +195,7 @@ export default function TransactionPage() {
                                 : `-$${Math.abs(t.amount)}`}
                             </td>
                             <td className="pl-4 pr-7.5 py-4.5">
-                              <button className="text-[#123288] py-2 px-3.5 max-[1024px]:px-3 rounded-full border border-[#123288] whitespace-nowrap text-sm max-[1024px]:text-xs">
+                              <button className="text-[#123288] py-2 px-3.5 max-[1024px]:px-3 rounded-full border border-[#123288] whitespace-nowrap text-sm cursor-pointer max-[1024px]:text-xs">
                                 Download
                               </button>
                             </td>
@@ -203,6 +203,42 @@ export default function TransactionPage() {
                         ))}
                       </tbody>
                     </table>
+                  ) : (
+                    <div className="absolute top-1/2 left-1/2 -translate-1/2 whitespace-nowrap font-medium text-lg text-blue-700 max-[1024px]:text-base">
+                      No transactions yet...
+                    </div>
+                  )}
+                  {/* Mobile transactions */}
+                  <div className="hidden max-[550px]:block">
+                    {currPageT.map((t) => (
+                      <div
+                        key={t.date}
+                        className="flex items-center justify-between p-5 text-[13px] border-b border-[#EBEEF2] last:border-none max-[380px]:gap-4"
+                      >
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={t.amount > 0 ? arrUp : arrDown}
+                            alt=""
+                            className="w-8.75 h-8.75 shrink-0"
+                          />
+                          <div>
+                            <div className="font-medium text-black max-w-37.5">
+                              {t.description}
+                            </div>
+                            <div className="whitespace-nowrap text-grey text-xs">
+                              {formatDate(t.date)}
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className={`font-medium whitespace-nowrap ${t.amount > 0 ? "text-[#16DBAA]" : "text-[#FE5C73]"}`}
+                        >
+                          {t.amount > 0
+                            ? `+$${t.amount}`
+                            : `-$${Math.abs(t.amount)}`}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

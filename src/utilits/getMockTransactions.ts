@@ -151,6 +151,8 @@ const transactions = [
   },
 ];
 
+const arrStatus = ["Pending", "Completed"];
+
 export function genereteDemoData() {
   const newTransactions = transactions.map((t) => {
     const now = Date.now();
@@ -158,13 +160,15 @@ export function genereteDemoData() {
     const randomDate = new Date(
       Math.random() * (now - ninetyDaysAgo) + ninetyDaysAgo,
     );
+    
 
     return {
       ...t,
       date: randomDate.getTime(),
+      status: arrStatus[Math.floor(Math.random() * arrStatus.length)],
     };
   });
-  
+
   const arrShuffle = newTransactions.sort(() => Math.random() - 0.5);
   return arrShuffle;
 }

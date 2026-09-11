@@ -41,7 +41,7 @@ export default function Nav() {
     location.pathname === "/" ? "Dashboard" : location.pathname.slice(1);
 
   return (
-    <nav className="bg-background-white w-[clamp(12.5rem,11.364rem+5.68vw,15.625rem)] self-stretch max-[1055px]:w-55 max-[960px]:hidden">
+    <nav className="bg-background-white w-[clamp(12.5rem,11.364rem+5.68vw,15.625rem)] min-h-screen self-stretch max-[1055px]:w-55 max-[960px]:hidden">
       <ul className="flex flex-col gap-10.5">
         <li className="flex items-center min-h-25">
           <button className="flex justify-center gap-2.25 px-10">
