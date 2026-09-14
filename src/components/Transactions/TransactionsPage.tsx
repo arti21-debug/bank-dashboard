@@ -3,7 +3,7 @@ import { useCardsStore } from "../../store/useCardsStore";
 import CardsBlock from "../CardsBlock";
 import Header from "../Header";
 import Nav from "../Nav";
-import MyExpense from "./MyExpense";
+import MyExpense from "./MyExpenseChart";
 
 import arrUp from "@/icons/transactions-page/arr-up.svg";
 import arrDown from "@/icons/transactions-page/arr-down.svg";
@@ -11,15 +11,37 @@ import arrPagLeft from "@/icons/transactions-page/arr-pag-left.svg";
 import arrPagRight from "@/icons/transactions-page/arr-pag-right.svg";
 import { genereteDemoData } from "../../utilits/getMockTransactions";
 import usePagination from "../../hooks/usePagination";
+import { genereteDemoInvest } from "../../utilits/getMockInvestments";
 
 export default function TransactionPage() {
   const [activeTransactions, setActiveTransactions] = useState("all");
 
   const cards = useCardsStore((state) => state.cards);
-  // генерация моковых транзакций
-  const addMockTrans = useCardsStore((state) => state.addMockTransactions);
-
   const activeCard = cards.find((c) => c.active);
+  // генерация моковых транзакций и инвестиций
+  const addMockTrans = useCardsStore((state) => state.addMockTransactions);
+  const addMockInvestments = useCardsStore((state) => state.addMockInvestments);
+
+  // фильтрация транзакций и затем сортировка по recent
+  const transactions =
+    activeTransactions === "all"
+      ? activeCard?.transactions
+      : activeTransactions === "income"
+        ? activeCard?.transactions.filter((t) => t.amount > 0)
+        : activeCard?.transactions.filter((t) => t.amount < 0);
+
+  const latestTrans = [...transactions ?? []].sort((a, b) => b.date - a.date);
+  const {
+    currPageT,
+    pageGroupStart,
+    totalPages,
+    currTransPage,
+    setCurrTransPage,
+    goNext,
+    goPrev,
+    reset,
+  } = usePagination(latestTrans);
+
   if (!activeCard) return;
 
   // функция под нужный формат даты из timestamp
@@ -45,25 +67,23 @@ export default function TransactionPage() {
     return `${day} ${month}, ${time}`;
   }
 
-  // фильтрация транзакций и затем сортировка по recent
-  const transactions =
-    activeTransactions === "all"
-      ? activeCard.transactions
-      : activeTransactions === "income"
-        ? activeCard.transactions.filter((t) => t.amount > 0)
-        : activeCard.transactions.filter((t) => t.amount < 0);
+  function splitToCardsMockTrans() {
+    const data = genereteDemoData();
+    const arr = Math.ceil(data.length / 2);
+    const first = data.slice(0, arr);
+    const second = data.slice(arr);
 
-  const latestTrans = [...transactions].sort((a, b) => b.date - a.date);
-  const {
-    currPageT,
-    pageGroupStart,
-    totalPages,
-    currTransPage,
-    setCurrTransPage,
-    goNext,
-    goPrev,
-    reset,
-  } = usePagination(latestTrans);
+    return { first, second };
+  }
+
+  function splitToCardsMockInvests() {
+    const investments = genereteDemoInvest();
+    const arrInvests = Math.ceil(investments.length / 2);
+    const firstPart = investments.slice(0, arrInvests);
+    const secondPart = investments.slice(arrInvests);
+
+    return { firstPart, secondPart };
+  }
 
   return (
     <div className="flex items-start">
@@ -120,13 +140,14 @@ export default function TransactionPage() {
                   </button>
                   <button
                     onClick={() => {
-                      const data = genereteDemoData();
-                      const arr = Math.ceil(data.length / 2);
-                      const first = data.slice(0, arr);
-                      const second = data.slice(arr);
-
+                      const { first, second } = splitToCardsMockTrans();
                       addMockTrans(1, first);
                       addMockTrans(2, second);
+
+                      const { firstPart, secondPart } =
+                        splitToCardsMockInvests();
+                      addMockInvestments(1, firstPart);
+                      addMockInvestments(2, secondPart);
                     }}
                     className="absolute right-0 cursor-pointer pb-2.75 border-b-3 max-[550px]:static max-[550px]:border-none max-[550px]:p-0"
                   >
@@ -134,7 +155,7 @@ export default function TransactionPage() {
                   </button>
                 </div>
                 <div className="relative w-full h-100 mt-6.25 mb-7.5 rounded-2xl bg-white overflow-y-auto max-[550px]:h-75">
-                  {transactions.length > 0 ? (
+                  {(transactions?.length ?? 0) > 0 ? (
                     <table className="relative w-full border-collapse min-w-175 max-[550px]:hidden">
                       <thead className="sticky top-0 bg-white z-10">
                         <tr className="border-b border-[#EBEEF2] whitespace-nowrap max-[1024px]:text-[13px]">

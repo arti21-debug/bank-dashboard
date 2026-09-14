@@ -161,7 +161,6 @@ export function genereteDemoData() {
       Math.random() * (now - ninetyDaysAgo) + ninetyDaysAgo,
     );
     
-
     return {
       ...t,
       date: randomDate.getTime(),

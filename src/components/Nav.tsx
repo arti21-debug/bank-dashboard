@@ -57,16 +57,16 @@ export default function Nav() {
             key={el}
             className={`relative flex items-center whitespace-nowrap gap-6.5 px-10.75 max-[840px]:hidden`}
           >
-            {activePage === el && (
+            {decodeURIComponent(activePage) === el && (
               <div className="absolute w-1.5 h-15 bg-[#2D60FF] left-0 rounded-full"></div>
             )}
             <img
-              src={activePage === el ? i.active : i.vector}
+              src={decodeURIComponent(activePage) === el ? i.active : i.vector}
               alt=""
-              className={`w-6.25 h-6.25 shrink-0 max-[1024px]:w-5 ${activePage === el ? "text-[#2D60FF]" : "text-[#B1B1B1]"}`}
+              className={`w-6.25 h-6.25 shrink-0 max-[1024px]:w-5 ${decodeURIComponent(activePage) === el ? "text-[#2D60FF]" : "text-[#B1B1B1]"}`}
             />
             <button
-              className={`font-medium text-lg max-[1024px]:text-base transition duration-300 ${activePage === el ? "text-[#2D60FF] cursor-default" : "text-[#B1B1B1] hover:text-[#ddd8d8] cursor-pointer"}`}
+              className={`font-medium text-lg max-[1024px]:text-base transition duration-300 ${decodeURIComponent(activePage) === el ? "text-[#2D60FF] cursor-default" : "text-[#B1B1B1] hover:text-[#ddd8d8] cursor-pointer"}`}
             >
               {el}
             </button>

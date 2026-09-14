@@ -1,3 +1,9 @@
+export interface Investment {
+  name: string;
+  amount: number;
+  date: number;
+}
+
 export interface Transaction {
   description: string;
   category: string;
@@ -9,6 +15,7 @@ export interface Transaction {
 export interface Card {
   id: number;
   transactions: Transaction[];
+  investments: Investment[];
   balance: number;
   active: boolean;
 }

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Card, Transaction } from "../types/data";
+import { Card, Investment, Transaction } from "../types/data";
 
 interface CardsStore {
   cards: Card[];
@@ -10,14 +10,30 @@ interface CardsStore {
     cardId: number | undefined,
     mockTrans: Transaction[],
   ) => void;
+  addMockInvestments: (
+    cardId: number | undefined,
+    mockInvests: Investment[],
+  ) => void;
 }
 
 export const useCardsStore = create<CardsStore>()(
   persist(
     (set) => ({
       cards: [
-        { id: 1, transactions: [], balance: 5555, active: true },
-        { id: 2, transactions: [], balance: 5555, active: false },
+        {
+          id: 1,
+          transactions: [],
+          investments: [],
+          balance: 5555,
+          active: true,
+        },
+        {
+          id: 2,
+          transactions: [],
+          investments: [],
+          balance: 5555,
+          active: false,
+        },
       ],
 
       switchActive: () =>
@@ -48,6 +64,18 @@ export const useCardsStore = create<CardsStore>()(
               ? {
                   ...card,
                   transactions: [...card.transactions, ...mockTrans],
+                }
+              : card,
+          ),
+        })),
+
+      addMockInvestments: (cardId, mockInvests) =>
+        set((state) => ({
+          cards: state.cards.map((card) =>
+            card.id === cardId
+              ? {
+                  ...card,
+                  investments: [...card.investments, ...mockInvests],
                 }
               : card,
           ),

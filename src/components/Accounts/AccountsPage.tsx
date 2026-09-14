@@ -67,15 +67,17 @@ export default function AccountsPage() {
   const date = new Date();
   const shift = date.getDay();
 
-  const startOfWeek = date.setDate(date.getDate() - shift);
+  const startOfWeek = new Date(date);
+  startOfWeek.setDate(date.getDate() - shift);
+  startOfWeek.setHours(0, 0, 0, 0);
 
   const debitedLastWeek = activeCard.transactions
-    .filter((t) => t.amount < 0 && t.date >= startOfWeek)
+    .filter((t) => t.amount < 0 && t.date >= startOfWeek.getTime())
     .reduce((sum, el) => sum + Math.abs(el.amount), 0)
     .toLocaleString("en-US");
 
   const creditedLastWeek = activeCard.transactions
-    .filter((t) => t.amount > 0 && t.date >= startOfWeek)
+    .filter((t) => t.amount > 0 && t.date >= startOfWeek.getTime())
     .reduce((sum, el) => sum + el.amount, 0)
     .toLocaleString("en-US");
 
