@@ -1,8 +1,26 @@
+:root {
+  --bg: var(--color-background-gray);
+  --bg-block: var(--color-background-white); /* фон блоков, хедера, nav */
+  --bg-input: #edf1f7; /* фон инпутов */
+  --text-primary: var(--color-dark-blue); /* основной текст */
+  --text-secondary: var(--color-grey); /* серый текст */
+  --border-color: #dfeaf2; /* границы */
+  --text-blue: var(--color-gray-blue);
+}
+
 body {
   font-family: "Inter", sans-serif;
   font-weight: 400;
-  background: var(--color-background-gray);
-  color: var(--color-dark-blue);
+}
+
+.dark {
+  --bg: var(--color-background-dark-gray);
+  --bg-block: #1e2130;
+  --bg-input: #2a2f45;
+  --text-primary: #ffffff;
+  --text-secondary: #8a9bc5;
+  --border-color: #2e3555;
+  --text-blue: #18177e;
 }
 
 .container {
@@ -13,7 +31,7 @@ body {
 .scrollbar {
   overflow-x: auto;
   scrollbar-width: thin;
-  scrollbar-color: #718EBF transparent;
+  scrollbar-color: #718ebf transparent;
 }
 
 .scrollbar::-webkit-scrollbar {
@@ -25,7 +43,7 @@ body {
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background: #718EBF;
+  background: #718ebf;
   border-radius: 9999px;
 }
 

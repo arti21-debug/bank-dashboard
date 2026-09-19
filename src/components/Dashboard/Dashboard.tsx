@@ -125,7 +125,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="flex items-start">
+      <div className="flex items-start bg-bg">
         <Nav />
         <div className="flex flex-1 flex-col min-w-0">
           <Header />
@@ -136,10 +136,10 @@ export default function Dashboard() {
                   <CardsBlock action={"See All"} />
                 </div>
                 <div className="flex-1 min-w-0 max-[960px]:max-w-121.75 max-[400px]:w-full">
-                  <h2 className="text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                  <h2 className="text-text-primary text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                     Recent Transaction
                   </h2>
-                  <div className="relative bg-background-white w-full h-58.75 rounded-3xl max-[1200px]:h-42.5">
+                  <div className="relative bg-bg-block w-full h-58.75 rounded-3xl max-[1200px]:h-42.5">
                     {recentTransactions.length > 0 ? (
                       <ul className="flex flex-col justify-between gap-2.5 p-6.25 max-[1200px]:p-4 max-[1200px]:gap-2">
                         {recentTransactions.map((tran, i) => (
@@ -160,7 +160,7 @@ export default function Dashboard() {
                                 ),
                             )}
                             <div className="flex flex-col min-w-0 flex-1 max-[770px]:items-center max-[380px]:items-stretch">
-                              <div className="text-black font-medium max-[1200px]:text-sm truncate">
+                              <div className="text-text-primary font-medium max-[1200px]:text-sm truncate">
                                 {tran.description}
                               </div>
                               <div className="text-grey text-[15px] pt-1.75 max-[1200px]:text-xs truncate">
@@ -187,10 +187,10 @@ export default function Dashboard() {
               </section>
               <section className="flex justify-between pt-6 max-[1024px]:flex-row max-[670px]:flex-col max-[670px]:gap-6">
                 <div className="flex-2 min-w-0 mr-6 w-full">
-                  <h2 className="text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                  <h2 className="text-text-primary text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                     Weekly Activity
                   </h2>
-                  <div className="bg-background-white w-full h-80.5 rounded-3xl">
+                  <div className="bg-bg-block w-full h-80.5 rounded-3xl">
                     <div className="flex justify-end gap-7.5 pt-7 pb-5.5 pr-7.5">
                       <div className="flex items-center gap-2.5 text-[15px] text-grey max-[1024px]:text-[13px] max-[375px]:text-xs">
                         <span className="block w-3.75 h-3.75 bg-[#16DBCC] rounded-full max-[1024px]:w-3 max-[1024px]:h-3"></span>
@@ -205,10 +205,10 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="flex-1 min-w-0 max-[960px]:w-57.5 max-[770px]:flex-col max-[400px]:w-full">
-                  <h2 className="text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                  <h2 className="text-text-primary text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                     Expense Statistics
                   </h2>
-                  <div className="relative bg-background-white w-full h-80.5 rounded-3xl max-[400px]:w-full">
+                  <div className="relative bg-bg-block w-full h-80.5 rounded-3xl max-[400px]:w-full">
                     {recentTransactions.length > 0 ? (
                       <ExpenseStat activeCard={activeCard} />
                     ) : (
@@ -221,14 +221,14 @@ export default function Dashboard() {
               </section>
               <section className="flex w-full justify-between pt-6 pb-9.75 max-[960px]:flex-row max-[770px]:flex-col max-[770px]:gap-6">
                 <div className="w-[clamp(18.438rem,15.028rem+17.05vw,27.813rem)] shrink-0 mr-6 max-[1200px]:flex-1 max-[1200px]:min-w-0 max-[400px]:w-full">
-                  <h2 className="text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                  <h2 className="text-text-primary text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                     Quick Transfer
                   </h2>
-                  <div className="bg-background-white text-black w-full h-69 rounded-3xl pt-8.75 px-6.25">
+                  <div className="bg-bg-block text-black w-full h-69 rounded-3xl pt-8.75 px-6.25">
                     <div className="flex items-center justify-between max-[480px]:hidden">
                       {currUserIndex > 0 && (
                         <button
-                          className="relative shrink-0 w-12.5 h-12.5 bg-background-white rounded-full shadow-[0_0_18px_-2px_rgb(231_228_232/80%)] mr-4 max-[1200px]:w-0 max-[1200px]:h-0 transition duration-300 hover:bg-[#e8e8f2] max-[480px]:hidden"
+                          className="relative shrink-0 w-12.5 h-12.5 cursor-pointer bg-background-white rounded-full shadow-[0_0_18px_-2px_rgb(231_228_232/80%)] mr-4 max-[1200px]:w-0 max-[1200px]:h-0 transition duration-300 hover:bg-[#e8e8f2] max-[480px]:hidden"
                           onClick={() => setCurrUserIndex(currUserIndex - 1)}
                         >
                           <ChevronLeft
@@ -247,7 +247,7 @@ export default function Dashboard() {
                       </div>
                       {currUserIndex + 3 < users.length && (
                         <button
-                          className="relative shrink-0 w-12.5 h-12.5 bg-background-white rounded-full shadow-[0_0_18px_-2px_rgb(231_228_232/80%)] ml-4 max-[1200px]:w-0 max-[1200px]:h-0 transition duration-300 hover:bg-[#e8e8f2] max-[480px]:hidden"
+                          className="relative shrink-0 w-12.5 h-12.5 bg-background-white cursor-pointer rounded-full shadow-[0_0_18px_-2px_rgb(231_228_232/80%)] ml-4 max-[1200px]:w-0 max-[1200px]:h-0 transition duration-300 hover:bg-[#e8e8f2] max-[480px]:hidden"
                           onClick={() => setCurrUserIndex(currUserIndex + 1)}
                         >
                           <ChevronRight
@@ -308,10 +308,10 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3 max-[400px]:w-full">
+                  <h2 className="text-text-primary text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3 max-[400px]:w-full">
                     Balance History
                   </h2>
-                  <div className="flex items-center bg-background-white w-full h-69 rounded-3xl text-grey">
+                  <div className="flex items-center bg-bg-block w-full h-69 rounded-3xl text-grey">
                     <BalanceHistory activeCard={activeCard} />
                   </div>
                 </div>

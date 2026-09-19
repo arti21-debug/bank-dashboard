@@ -10,7 +10,17 @@
   --color-light-grey: #F5F7FA;
   --color-black: #232323;
   --color-background-white: #fff;
+  --color-background-dark: #1a1a1a;
   --color-background-gray: #DFE5EE;
+  --color-background-dark-gray: #57585c;
+
+  --color-bg: var(--bg);
+  --color-bg-block: var(--bg-block);
+  --color-bg-input: var(--bg-input);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border-color: var(--border-color);
+  --color-text-blue: var(--text-blue);
 }
 
 @import "./index.css";

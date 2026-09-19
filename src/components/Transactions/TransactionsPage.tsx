@@ -86,7 +86,7 @@ export default function TransactionPage() {
   }
 
   return (
-    <div className="flex items-start">
+    <div className="flex items-start bg-bg">
       <Nav />
       <div className="flex flex-1 flex-col min-w-0">
         <Header />
@@ -97,26 +97,26 @@ export default function TransactionPage() {
                 <CardsBlock action={"+ Add Card"} />
               </div>
               <div className="flex-1 min-w-0 max-[960px]:max-w-121.75 max-[400px]:w-full">
-                <h2 className="text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                <h2 className="text-text-primary text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                   My Expense
                 </h2>
-                <div className="bg-background-white w-full h-58.75 rounded-3xl max-[1200px]:h-42.5">
+                <div className="bg-bg-block w-full h-58.75 rounded-3xl max-[1200px]:h-42.5">
                   <MyExpense activeCard={activeCard} />
                 </div>
               </div>
             </section>
             <section className="pt-6">
-              <h2 className="text-[22px] font-semibold max-[1024px]:text-lg max-[375px]:text-base">
+              <h2 className="text-text-primary text-[22px] font-semibold max-[1024px]:text-lg max-[375px]:text-base">
                 Recent Transactions
               </h2>
               <div className="pt-6.75 max-[1024px]:pt-4.5">
-                <div className="relative flex gap-20.5 font-medium border-b border-[#EBEEF2] max-[1024px]:gap-15 max-[1024px]:text-[13px] max-[550px]:flex-col max-[550px]:gap-5 max-[550px]:border-none max-[550px]:w-fit max-[550px]:mx-auto">
+                <div className="relative flex gap-20.5 font-medium border-b text-border-color max-[1024px]:gap-15 max-[1024px]:text-[13px] max-[550px]:flex-col max-[550px]:gap-5 max-[550px]:border-none max-[550px]:w-fit max-[550px]:mx-auto">
                   <button
                     onClick={() => {
                       setActiveTransactions("all");
                       reset();
                     }}
-                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "all" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
+                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "all" ? "text-text-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
                   >
                     All Transactions
                   </button>
@@ -125,7 +125,7 @@ export default function TransactionPage() {
                       setActiveTransactions("income");
                       reset();
                     }}
-                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "income" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
+                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "income" ? "text-text-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
                   >
                     Income
                   </button>
@@ -134,7 +134,7 @@ export default function TransactionPage() {
                       setActiveTransactions("expense");
                       reset();
                     }}
-                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "expense" ? "text-gray-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
+                    className={`cursor-pointer pb-2.75 border-b-3 ${activeTransactions === "expense" ? "text-text-blue border-gray-blue" : "text-grey border-transparent"} max-[550px]:p-1`}
                   >
                     Expense
                   </button>
@@ -149,15 +149,15 @@ export default function TransactionPage() {
                       addMockInvestments(1, firstPart);
                       addMockInvestments(2, secondPart);
                     }}
-                    className="absolute right-0 cursor-pointer pb-2.75 border-b-3 max-[550px]:static max-[550px]:border-none max-[550px]:p-0"
+                    className="text-text-secondary absolute right-0 cursor-pointer pb-2.75 border-b-3 max-[550px]:static max-[550px]:border-none max-[550px]:p-0"
                   >
                     + generete data
                   </button>
                 </div>
-                <div className="relative w-full h-100 mt-6.25 mb-7.5 rounded-2xl bg-white overflow-y-auto max-[550px]:h-75">
+                <div className="relative w-full h-100 mt-6.25 mb-7.5 rounded-2xl bg-bg-block overflow-y-auto max-[550px]:h-75">
                   {(transactions?.length ?? 0) > 0 ? (
                     <table className="relative w-full border-collapse min-w-175 max-[550px]:hidden">
-                      <thead className="sticky top-0 bg-white z-10">
+                      <thead className="sticky top-0 bg-bg-block z-10">
                         <tr className="border-b border-[#EBEEF2] whitespace-nowrap max-[1024px]:text-[13px]">
                           {[
                             "Description",
@@ -191,7 +191,7 @@ export default function TransactionPage() {
                                   alt=""
                                   className="shrink-0 max-[1024px]:w-5 max-[1024px]:h-5"
                                 />
-                                <span className="truncate max-w-37.5">
+                                <span className="text-text-primary truncate max-w-37.5">
                                   {t.description}
                                 </span>
                               </div>
@@ -199,13 +199,13 @@ export default function TransactionPage() {
                             <td className="px-4 py-4.5 text-dark-blue whitespace-nowrap">
                               #12548796
                             </td>
-                            <td className="px-4 py-4.5 whitespace-nowrap">
+                            <td className="text-text-primary px-4 py-4.5 whitespace-nowrap">
                               {t.category}
                             </td>
-                            <td className="px-4 py-4.5 whitespace-nowrap">
+                            <td className="text-text-primary px-4 py-4.5 whitespace-nowrap">
                               1234 ****
                             </td>
-                            <td className="px-4 py-4.5 whitespace-nowrap">
+                            <td className="text-text-primary px-4 py-4.5 whitespace-nowrap">
                               {formatDate(t.date)}
                             </td>
                             <td

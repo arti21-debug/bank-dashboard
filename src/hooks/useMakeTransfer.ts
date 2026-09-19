@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCardsStore } from "../store/useCardsStore";
 import { Card } from "../types/data";
+import usePopup from "./usePopup";
 
 export default function useMakeTransfer(
   selectedUser: number | null,
@@ -8,21 +9,10 @@ export default function useMakeTransfer(
   cards: Card[],
 ) {
   const [error, setError] = useState<string | null>(null);
-  const [isPopOpen, setIsPopOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsVisible(false);
-      setTimeout(() => setIsPopOpen(false), 300);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, [isPopOpen]);
-
 
   const activeCard = cards.find((c) => c.active);
   const makeTransfer = useCardsStore((state) => state.makeTransfer);
+  const { isPopOpen, setIsPopOpen, isVisible, setIsVisible } = usePopup();
 
   const handleMakeTransfer = () => {
     setError(null);

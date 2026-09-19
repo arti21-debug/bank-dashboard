@@ -1,9 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Card, Investment, Transaction } from "../types/data";
+import {
+  Card,
+  Investment,
+  Transaction,
+  UserData,
+  UserPreferences,
+  UserSecurity,
+} from "../types/data";
 
 interface CardsStore {
   cards: Card[];
+  userData: UserData;
+  userPreferences: UserPreferences;
+  userSecurity: UserSecurity;
   switchActive: () => void;
   makeTransfer: (cardId: number | undefined, t: Transaction) => void;
   addMockTransactions: (
@@ -14,11 +24,15 @@ interface CardsStore {
     cardId: number | undefined,
     mockInvests: Investment[],
   ) => void;
+  editProfile: (data: FormData) => void;
+  editPreferences: (data: FormData) => void;
+  editSecurity: (data: FormData) => void;
+  updatePassword: (data: FormData) => void;
 }
 
 export const useCardsStore = create<CardsStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       cards: [
         {
           id: 1,
@@ -35,6 +49,30 @@ export const useCardsStore = create<CardsStore>()(
           active: false,
         },
       ],
+      userData: {
+        name: "",
+        username: "",
+        email: "",
+        password: "",
+        birthDate: "",
+        presentAddress: "",
+        permanentAddress: "",
+        city: "",
+        postalCode: "",
+        country: "",
+      },
+      userPreferences: {
+        currency: "USD",
+        timeZone: "(GMT-12:00) International Date Line West",
+        notification: {
+          sendOrReceiveCurrency: false,
+          receiveOrder: false,
+          recommendation: false,
+        },
+      },
+      userSecurity: {
+        enable2fa: false,
+      },
 
       switchActive: () =>
         set((state) => ({
@@ -80,6 +118,56 @@ export const useCardsStore = create<CardsStore>()(
               : card,
           ),
         })),
+
+      editProfile: (data) => {
+        const state = get();
+        const userData = Object.fromEntries(
+          Object.entries(state.userData).map(([key]) => [
+            key,
+            data.get(key) ?? "",
+          ]),
+        ) as unknown as UserData;
+        set({ userData });
+      },
+
+      editPreferences: (data) => {
+        const state = get();
+        const userPreferences = Object.fromEntries(
+          Object.entries(state.userPreferences).map(([key, val]) =>
+            key === "notification"
+              ? [
+                  key,
+                  Object.fromEntries(
+                    Object.entries(val).map(([key]) =>
+                      data.get(key) === "on" ? [key, true] : [key, false],
+                    ),
+                  ),
+                ]
+              : [key, data.get(key)],
+          ),
+        ) as unknown as UserPreferences;
+        set({ userPreferences });
+      },
+
+      editSecurity: (data) => {
+        const state = get();
+        const userSecurity = Object.fromEntries(
+          Object.entries(state.userSecurity).map(([key]) => 
+            [key, data.get(key) === "on"],
+          ),
+        ) as unknown as UserSecurity;
+        set({ userSecurity });
+      },
+
+      updatePassword: (data) => {
+        set((state) => ({
+          userData: Object.fromEntries(
+            Object.entries(state.userData).map(([key, val]) =>
+              key === "password" ? [key, data.get("newPassword")] : [key, val],
+            ),
+          ) as unknown as UserData
+        }));
+      }
     }),
     { name: "cards" },
   ),

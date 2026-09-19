@@ -142,6 +142,7 @@ export default function BalanceHistory({ activeCard }: BalanceProps) {
         <YAxis
           axisLine={false}
           tick={{ fill: "#718EBF", fontSize }}
+          tickMargin={10}
           tickLine={{ stroke: "#718EBF" }}
         />
         <Tooltip

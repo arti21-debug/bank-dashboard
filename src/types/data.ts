@@ -12,6 +12,35 @@ export interface Transaction {
   status: string;
 }
 
+export type Notification = {
+  sendOrReceiveCurrency: boolean;
+  receiveOrder: boolean;
+  recommendation: boolean;
+};
+
+export interface UserSecurity {
+  enable2fa: boolean;
+}
+
+export interface UserPreferences {
+  currency: string;
+  timeZone: string;
+  notification: Notification;
+}
+
+export interface UserData {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+  birthDate: string;
+  presentAddress: string;
+  permanentAddress: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}
+
 export interface Card {
   id: number;
   transactions: Transaction[];

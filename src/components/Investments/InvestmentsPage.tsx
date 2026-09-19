@@ -29,7 +29,7 @@ export default function InvestmentsPage() {
     .toLocaleString("en-US");
 
   return (
-    <div className="flex items-start">
+    <div className="flex items-start bg-bg">
       <Nav />
       <div className="flex flex-1 flex-col min-w-0">
         <Header />
@@ -58,7 +58,7 @@ export default function InvestmentsPage() {
               ].map(({ icon, bg, label, value }) => (
                 <div
                   key={label}
-                  className="flex-1 min-w-67.5 max-w-87.5 flex items-center justify-center bg-white rounded-2xl py-[clamp(1rem,0.5rem+2.5vw,1.875rem)] px-3 @container h-30 max-[1240px]:h-22.5"
+                  className="flex-1 min-w-67.5 max-w-87.5 flex items-center justify-center bg-bg-block rounded-2xl py-[clamp(1rem,0.5rem+2.5vw,1.875rem)] px-3 @container h-30 max-[1240px]:h-22.5"
                 >
                   <div className="flex items-center min-w-0 max-w-full gap-[clamp(0.5rem,0.25rem+1.25vw,0.938rem)]">
                     <div
@@ -78,7 +78,7 @@ export default function InvestmentsPage() {
                       <div className="text-[clamp(0.875rem,10cqw,1rem)] truncate max-[500px]:text-xs">
                         {label}
                       </div>
-                      <div className="text-black font-semibold text-[clamp(0.75rem,10cqw,1.25rem)] truncate">
+                      <div className="text-text-primary font-semibold text-[clamp(0.75rem,10cqw,1.25rem)] truncate">
                         {value}
                       </div>
                     </div>
@@ -88,25 +88,25 @@ export default function InvestmentsPage() {
             </section>
             <section className="flex gap-7.5 pt-6 max-[1024px]:flex-col">
               <div className="flex-1 min-w-0 ">
-                <h2 className="text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                <h2 className="text-text-primary text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                   Yearly Total Investment
                 </h2>
-                <div className="bg-background-white w-full h-70.5 rounded-3xl">
+                <div className="bg-bg-block w-full h-70.5 rounded-3xl">
                   <TotalInvestmentChart activeCard={activeCard} />
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                <h2 className="text-text-primary text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                   Monthly Revenue
                 </h2>
-                <div className="bg-background-white w-full h-70.5 rounded-3xl">
+                <div className="bg-bg-block w-full h-70.5 rounded-3xl">
                   <RevenueChart />
                 </div>
               </div>
             </section>
             <section className="flex gap-7.5 pt-6 pb-12.5 max-[800px]:flex-col">
               <div className="flex-2 min-w-0 h-86.25 max-[1280px]:flex-1">
-                <h2 className="text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                <h2 className="text-text-primary text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                   My Investment
                 </h2>
                 {[
@@ -149,7 +149,7 @@ export default function InvestmentsPage() {
                   }) => (
                     <div
                       key={label}
-                      className="grid grid-cols-[1fr_0.5fr_0.5fr] items-center gap-4 p-3.75 mb-3.75 bg-background-white text-grey text-[15px] w-full h-22.5 rounded-2xl last:mb-0 max-[1280px]:text-xs max-[1080px]:p-2.75 max-[460px]:flex max-[460px]:justify-between"
+                      className="grid grid-cols-[1fr_0.5fr_0.5fr] items-center gap-4 p-3.75 mb-3.75 bg-bg-block text-grey text-[15px] w-full h-22.5 rounded-2xl last:mb-0 max-[1280px]:text-xs max-[1080px]:p-2.75 max-[460px]:flex max-[460px]:justify-between"
                     >
                       <div className="flex items-center gap-5 min-w-0 max-[460px]:gap-3">
                         <div
@@ -163,14 +163,14 @@ export default function InvestmentsPage() {
                           />
                         </div>
                         <div className="min-w-0">
-                          <div className="font-medium text-base text-black truncate max-[1280px]:text-[13px]">
+                          <div className="font-medium text-base text-text-primary truncate max-[1280px]:text-[13px]">
                             {label}
                           </div>
                           <div className="truncate">{category}</div>
                         </div>
                       </div>
                       <div className="max-[460px]:hidden">
-                        <div className="font-medium text-base text-black max-[1280px]:text-[13px]">
+                        <div className="font-medium text-base text-text-primary max-[1280px]:text-[13px]">
                           {value}
                         </div>
                         <div className="truncate">Envestment Value</div>
@@ -189,12 +189,12 @@ export default function InvestmentsPage() {
                 )}
               </div>
               <div className="flex-1 min-w-0 h-86.25">
-                <h2 className="text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                <h2 className="text-text-primary text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                   Trending Stock
                 </h2>
-                <div className="bg-background-white w-full h-75 rounded-3xl overflow-hidden">
+                <div className="bg-bg-block w-full h-75 rounded-3xl overflow-hidden">
                   <table className="w-full border-collapse table-fixed text-[14px]">
-                    <thead className=" bg-white">
+                    <thead className="bg-bg-block">
                       <tr className="border-b border-[#EBEEF2] whitespace-nowrap max-[1024px]:text-[13px]">
                         {["SL No", "Name", "Price", "Return"].map((el) => (
                           <th
@@ -251,7 +251,7 @@ export default function InvestmentsPage() {
                           returnPercent,
                           returnColor,
                         }) => (
-                          <tr key={number}>
+                          <tr key={number} className="text-text-primary">
                             <td className="pl-7.5 pr-3.5 py-3.25">{number}</td>
                             <td className="px-4 py-3.25">{name}</td>
                             <td className="px-4 py-3.25">{price}</td>

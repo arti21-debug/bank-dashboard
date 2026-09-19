@@ -3,12 +3,12 @@ import Nav from "../Nav";
 
 export default function MyPrivilegesPage() {
   return (
-    <div className="flex items-start">
+    <div className="flex items-start bg-bg">
       <Nav />
       <div className="flex flex-1 flex-col min-w-0">
         <Header />
         <main className="flex items-center justify-center p-30">
-          <div className="text-black font-bold text-lg whitespace-nowrap">
+          <div className="text-text-primary font-bold text-lg whitespace-nowrap">
             Coming soon...
           </div>
         </main>

@@ -82,7 +82,7 @@ export default function AccountsPage() {
     .toLocaleString("en-US");
 
   return (
-    <div className="flex items-start">
+    <div className="flex items-start bg-bg">
       <Nav />
       <div className="flex flex-1 flex-col min-w-0">
         <Header />
@@ -117,7 +117,7 @@ export default function AccountsPage() {
               ].map(({ icon, bg, label, value }) => (
                 <div
                   key={label}
-                  className="flex-1 min-w-0 flex items-center justify-center bg-white rounded-2xl py-[clamp(1rem,0.5rem+2.5vw,1.875rem)] px-3 @container h-30 max-[1240px]:h-22.5"
+                  className="flex-1 min-w-0 flex items-center justify-center bg-bg-block rounded-2xl py-[clamp(1rem,0.5rem+2.5vw,1.875rem)] px-3 @container h-30 max-[1240px]:h-22.5"
                 >
                   <div className="flex items-center min-w-0 max-w-full gap-[clamp(0.5rem,0.25rem+1.25vw,0.938rem)]">
                     <div
@@ -137,7 +137,7 @@ export default function AccountsPage() {
                       <div className="text-[clamp(0.875rem,10cqw,1rem)] truncate max-[500px]:text-xs">
                         {label}
                       </div>
-                      <div className="text-black font-semibold text-[clamp(0.75rem,10cqw,1.563rem)] truncate">
+                      <div className="text-text-primary font-semibold text-[clamp(0.75rem,10cqw,1.563rem)] truncate">
                         {value}
                       </div>
                     </div>
@@ -146,12 +146,11 @@ export default function AccountsPage() {
               ))}
             </section>
             <section className="flex gap-7.5 pt-6 max-[800px]:flex-col">
-              {/* левый блок */}
               <div className="flex-2 min-w-0 max-[800px]:w-121.75 max-[570px]:w-full">
-                <h2 className="text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                <h2 className="text-text-primary text-[22px] font-semibold pb-5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                   Last Transaction
                 </h2>
-                <div className="relative bg-background-white w-full h-58.75 overflow-y-hidden overflow-x-auto rounded-3xl max-[1200px]:h-42.5">
+                <div className="relative bg-bg-block w-full h-58.75 overflow-y-hidden overflow-x-auto rounded-3xl max-[1200px]:h-42.5">
                   {recentTransactions.length > 0 ? (
                     <ul className="flex flex-col gap-2.5 py-6.25 px-4 text-grey max-[1200px]:p-4 max-[1200px]:gap-2 max-[400px]:p-2">
                       {recentTransactions.map((tran, i) => (
@@ -173,7 +172,7 @@ export default function AccountsPage() {
                                 ),
                             )}
                             <div className="flex flex-col max-[770px]:items-start max-[380px]:items-stretch">
-                              <div className="text-black font-medium max-[1200px]:text-sm truncate">
+                              <div className="text-text-primary font-medium max-[1200px]:text-sm truncate">
                                 {tran.description}
                               </div>
                               <div className="text-grey text-[15px] pt-1.75 max-[1200px]:text-xs truncate">
@@ -208,10 +207,9 @@ export default function AccountsPage() {
                 </div>
               </div>
 
-              {/* правый блок */}
               <div className="flex-1 min-w-0 max-[800px]:hidden max-[400px]:block">
                 <div className="flex items-center justify-between pb-5 max-[375px]:pb-3">
-                  <h2 className="text-[22px] font-semibold max-[1024px]:text-lg max-[375px]:text-base">
+                  <h2 className="text-text-primary text-[22px] font-semibold max-[1024px]:text-lg max-[375px]:text-base">
                     My Cards
                   </h2>
                   <button
@@ -221,7 +219,7 @@ export default function AccountsPage() {
                       );
                       switchCard();
                     }}
-                    className="text-[17px] font-semibold mr-2 cursor-pointer max-[1024px]:text-[15px] max-[375px]:text-sm transition duration-300 hover:text-[#6060c6]"
+                    className="text-text-primary text-[17px] font-semibold mr-2 cursor-pointer max-[1024px]:text-[15px] max-[375px]:text-sm transition duration-300 hover:text-[#6060c6]"
                   >
                     Switch Card
                   </button>
@@ -236,10 +234,10 @@ export default function AccountsPage() {
             </section>
             <section className="flex gap-7.5 pt-6 pb-9 max-[650px]:flex-col">
               <div className="flex-2 min-w-0 max-[1024px]:flex-1">
-                <h2 className="text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                <h2 className="text-text-primary text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                   Debit & Credit Overview
                 </h2>
-                <div className="bg-background-white w-full h-91 rounded-3xl">
+                <div className="bg-bg-block w-full h-91 rounded-3xl">
                   <div className="flex justify-between gap-7.5 pt-7 pb-5.5 px-7.5">
                     <div
                       className="relative min-w-0 text-grey max-[1024px]:text-xs group"
@@ -272,10 +270,10 @@ export default function AccountsPage() {
                 </div>
               </div>
               <div className="flex-1 min-w-0 max-[650px]:max-w-75">
-                <h2 className="text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
+                <h2 className="text-text-primary text-[22px] font-semibold pb-4.5 max-[1024px]:text-lg max-[375px]:text-base max-[375px]:pb-3">
                   Invoices Sent
                 </h2>
-                <div className="flex flex-col justify-between gap-5 my-auto bg-background-white text-grey w-full h-91 rounded-3xl py-7.5 px-6.25 max-[1130px]:py-3 max-[1130px]:px-3  max-[420px]:px-4">
+                <div className="flex flex-col justify-between gap-5 my-auto bg-bg-block text-grey w-full h-91 rounded-3xl py-7.5 px-6.25 max-[1130px]:py-3 max-[1130px]:px-3  max-[420px]:px-4">
                   {[
                     {
                       icon: invoiceIcon1,
