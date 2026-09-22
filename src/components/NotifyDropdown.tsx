@@ -1,6 +1,6 @@
 import { RefObject, useEffect } from "react";
 import { useCardsStore } from "../store/useCardsStore";
-import { transactionIcons } from "./Dashboard/Dashboard";
+import { transactionIcons } from "../config/transactionIcons";
 
 type NotifyProps = {
   setIsNotifyDropdownOpen: (val: boolean) => void;
@@ -56,10 +56,10 @@ export default function NotifyDropdown({
           {recentTransactions.map((tran, i) => (
             <div key={i} className="flex items-center justify-between gap-4">
               {transactionIcons.map(
-                (icon, i) =>
+                (icon) =>
                   icon.type === tran.category && (
                     <div
-                      key={i}
+                      key={icon.type + icon.bg}
                       className={`relative w-13.75 h-13.75 max-[1200px]:w-10 max-[1200px]:h-10 shrink-0 rounded-full`}
                       style={{ backgroundColor: icon.bg }}
                     >

@@ -28,10 +28,10 @@ export const NAV_VECTORS = {
   Transactions: { vector: vector2, active: vector2Active },
   Accounts: { vector: vector3, active: vector3Active },
   Investments: { vector: vector4, active: vector4Active },
-  "Credit Cards": { vector: vector5, active: vector5Active },
+  "Credit-Cards": { vector: vector5, active: vector5Active },
   Loans: { vector: vector6, active: vector6Active },
   Services: { vector: vector7, active: vector7Active },
-  "My Privileges": { vector: vector8, active: vector8Active },
+  "My-Privileges": { vector: vector8, active: vector8Active },
   Setting: { vector: vector9, active: vector9Active },
 };
 
@@ -41,9 +41,7 @@ export default function Nav() {
 
   const location = useLocation();
   const activePage =
-    location.pathname === "/"
-      ? "Dashboard"
-      : decodeURIComponent(location.pathname.slice(1));
+    location.pathname === "/" ? "Dashboard" : location.pathname.slice(1);
 
   return (
     <nav className="bg-bg-block w-[clamp(12.5rem,11.364rem+5.68vw,15.625rem)] pb-10.5 min-h-screen self-stretch max-[1055px]:w-55 max-[960px]:hidden">
@@ -51,14 +49,7 @@ export default function Nav() {
         <li className="flex items-center min-h-25">
           <button className="flex justify-center gap-2.25 px-10">
             <img src={`${iconLogo}`} alt="" />
-            <img
-              src={
-                isDark
-                  ? BankDashLight
-                  : BankDash
-              }
-              alt=""
-            />
+            <img src={isDark ? BankDashLight : BankDash} alt="" />
           </button>
         </li>
         {Object.entries(NAV_VECTORS).map(([el, i]) => (
@@ -80,7 +71,11 @@ export default function Nav() {
             <button
               className={`font-medium text-lg max-[1024px]:text-base transition duration-300 ${activePage === el ? "text-[#2D60FF] cursor-default" : "text-[#B1B1B1] hover:text-[#ddd8d8] cursor-pointer"}`}
             >
-              {el}
+              {el === "Credit-Cards"
+                ? "Credit Cards"
+                : el === "My-Privileges"
+                  ? "My Privileges"
+                  : el}
             </button>
           </li>
         ))}

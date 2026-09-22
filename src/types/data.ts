@@ -5,6 +5,7 @@ export interface Investment {
 }
 
 export interface Transaction {
+  id: string;
   description: string;
   category: string;
   amount: number;
@@ -43,6 +44,7 @@ export interface UserData {
 
 export interface Card {
   id: number;
+  number: string;
   transactions: Transaction[];
   investments: Investment[];
   balance: number;

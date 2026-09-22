@@ -9,9 +9,10 @@ interface ColorProps {
 }
 
 export default function Card({ color }: ColorProps) {
+  const cardId = color === "blue" || color === "light-blue" ? 1 : 2;
+
   const cards = useCardsStore((state) => state.cards);
   const switchCard = useCardsStore((state) => state.switchActive);
-
   const activeCard = cards.find((c) => c.active);
 
   const activeCardBorderStyle =
@@ -23,7 +24,7 @@ export default function Card({ color }: ColorProps) {
   return (
     <article
       onClick={() =>
-        color !== "light-blue" && color !== "light-white" && switchCard()
+        color !== "light-blue" && color !== "light-white" && switchCard(cardId)
       }
       className={`font-lato text-xs w-full h-58.75 overflow-auto ${color === "blue" || color === "light-blue" ? "bg-linear-to-b from-[#4C49ED] to-[#0A06F4] text-white" : "bg-[white] text-dark-blue"} rounded-3xl leading-none ${color === "light-blue" || color === "light-white" ? "cursor-default border-none" : `cursor-pointer max-[1035px]:w-57 ${activeCardBorderStyle}`} max-[1200px]:h-42.5 max-[1035px]:shrink-0`}
       role="button"

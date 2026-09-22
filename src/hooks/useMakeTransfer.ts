@@ -6,6 +6,7 @@ import usePopup from "./usePopup";
 export default function useMakeTransfer(
   selectedUser: number | null,
   amountValue: string,
+  setAmountValue: (val: string) => void,
   cards: Card[],
 ) {
   const [error, setError] = useState<string | null>(null);
@@ -25,12 +26,14 @@ export default function useMakeTransfer(
       if (activeCard.balance < Number(amountValue))
         throw new Error("Not enough funds");
 
+      setAmountValue("");
       makeTransfer(activeCard?.id, {
+        id: crypto.randomUUID(),
         description: "Deposit from my Card",
         category: "Transfer",
         amount: Number(amountValue),
         date: Date.now(),
-        status: "Completed"
+        status: "Completed",
       });
 
       setIsPopOpen(true);

@@ -14,7 +14,8 @@ interface CardsStore {
   userData: UserData;
   userPreferences: UserPreferences;
   userSecurity: UserSecurity;
-  switchActive: () => void;
+  userAvatar: string | null;
+  switchActive: (id: number) => void;
   makeTransfer: (cardId: number | undefined, t: Transaction) => void;
   addMockTransactions: (
     cardId: number | undefined,
@@ -28,14 +29,16 @@ interface CardsStore {
   editPreferences: (data: FormData) => void;
   editSecurity: (data: FormData) => void;
   updatePassword: (data: FormData) => void;
+  setAvatar: (base64: string) => void;
 }
 
 export const useCardsStore = create<CardsStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       cards: [
         {
           id: 1,
+          number: "1234 ****",
           transactions: [],
           investments: [],
           balance: 5555,
@@ -43,6 +46,7 @@ export const useCardsStore = create<CardsStore>()(
         },
         {
           id: 2,
+          number: "1234 ****",
           transactions: [],
           investments: [],
           balance: 5555,
@@ -73,12 +77,13 @@ export const useCardsStore = create<CardsStore>()(
       userSecurity: {
         enable2fa: false,
       },
+      userAvatar: null,
 
-      switchActive: () =>
+      switchActive: (id) =>
         set((state) => ({
           cards: state.cards.map((card) => ({
             ...card,
-            active: !card.active,
+            active: card.id === id,
           })),
         })),
 
@@ -120,55 +125,68 @@ export const useCardsStore = create<CardsStore>()(
         })),
 
       editProfile: (data) => {
-        const state = get();
-        const userData = Object.fromEntries(
-          Object.entries(state.userData).map(([key]) => [
-            key,
-            data.get(key) ?? "",
-          ]),
-        ) as unknown as UserData;
-        set({ userData });
+        set((state) => ({
+          userData: {
+            ...state.userData,
+            name: String(data.get("name") ?? ""),
+            username: String(data.get("username") ?? ""),
+            email: String(data.get("email") ?? ""),
+            password: String(data.get("password") ?? ""),
+            birthDate: String(data.get("birthDate") ?? ""),
+            presentAddress: String(data.get("presentAddress") ?? ""),
+            permanentAddress: String(data.get("permanentAddress") ?? ""),
+            city: String(data.get("city") ?? ""),
+            postalCode: String(data.get("postalCode") ?? ""),
+            country: String(data.get("country") ?? ""),
+          },
+        }));
       },
 
       editPreferences: (data) => {
-        const state = get();
-        const userPreferences = Object.fromEntries(
-          Object.entries(state.userPreferences).map(([key, val]) =>
-            key === "notification"
-              ? [
-                  key,
-                  Object.fromEntries(
-                    Object.entries(val).map(([key]) =>
-                      data.get(key) === "on" ? [key, true] : [key, false],
-                    ),
-                  ),
-                ]
-              : [key, data.get(key)],
-          ),
-        ) as unknown as UserPreferences;
-        set({ userPreferences });
+        set((state) => ({
+          userPreferences: {
+            ...state.userPreferences,
+            currency: String(
+              data.get("currency") ?? state.userPreferences.currency,
+            ),
+            timeZone: String(
+              data.get("timezone") ?? state.userPreferences.timeZone,
+            ),
+            notification: {
+              sendOrReceiveCurrency: data.get("sendOrReceiveCurrency") === "on",
+              receiveOrder: data.get("receiveOrder") === "on",
+              recommendation: data.get("recommendation") === "on",
+            },
+          },
+        }));
       },
 
       editSecurity: (data) => {
-        const state = get();
-        const userSecurity = Object.fromEntries(
-          Object.entries(state.userSecurity).map(([key]) => 
-            [key, data.get(key) === "on"],
-          ),
-        ) as unknown as UserSecurity;
-        set({ userSecurity });
+        set({
+          userSecurity: {
+            enable2fa: data.get("enable2fa") === "on",
+          },
+        });
       },
 
       updatePassword: (data) => {
         set((state) => ({
-          userData: Object.fromEntries(
-            Object.entries(state.userData).map(([key, val]) =>
-              key === "password" ? [key, data.get("newPassword")] : [key, val],
-            ),
-          ) as unknown as UserData
+          userData: {
+            ...state.userData,
+            password: String(data.get("newPassword") ?? ""),
+          },
         }));
-      }
+      },
+
+      setAvatar: (data) => set({ userAvatar: data }),
     }),
-    { name: "cards" },
+    {
+      name: "cards",
+      partialize: (state) => {
+        const { userData, ...rest } = state;
+        const { password, ...safeUserData } = userData;
+        return { ...rest, userData: safeUserData };
+      },
+    },
   ),
 );
