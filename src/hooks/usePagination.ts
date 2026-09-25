@@ -1,32 +1,31 @@
 import { useState } from "react";
-import { Transaction } from "../types/data";
 
-export default function usePagination(latestTrans: Transaction[]) {
-  const [currTransPage, setCurrTransPage] = useState(0);
+export default function usePagination<T>(latestTrans: T[]) {
+  const [currTransPageIndex, setCurrTransPageIndex] = useState(0);
   const [pageGroupStart, setPageGroupStart] = useState(0);
 
   const currPageT = latestTrans.slice(
-    currTransPage * 5,
-    (currTransPage + 1) * 5,
+    currTransPageIndex * 5,
+    (currTransPageIndex + 1) * 5,
   );
   const totalPages = Math.ceil(latestTrans.length / 5);
 
   const goNext = () => {
-    setCurrTransPage((prev) => prev + 1);
-    if (currTransPage + 1 >= pageGroupStart + 5) {
+    setCurrTransPageIndex((prev) => prev + 1);
+    if (currTransPageIndex + 1 >= pageGroupStart + 5) {
       setPageGroupStart((prev) => prev + 5);
     }
   };
 
   const goPrev = () => {
-    setCurrTransPage((prev) => prev - 1);
-    if (currTransPage - 1 < pageGroupStart) {
+    setCurrTransPageIndex((prev) => prev - 1);
+    if (currTransPageIndex - 1 < pageGroupStart) {
       setPageGroupStart((prev) => prev - 5);
     }
   };
 
   const reset = () => {
-    setCurrTransPage(0);
+    setCurrTransPageIndex(0);
     setPageGroupStart(0);
   };
 
@@ -34,8 +33,8 @@ export default function usePagination(latestTrans: Transaction[]) {
     currPageT,
     pageGroupStart,
     totalPages,
-    currTransPage,
-    setCurrTransPage,
+    currTransPageIndex,
+    setCurrTransPageIndex,
     goNext,
     goPrev,
     reset,

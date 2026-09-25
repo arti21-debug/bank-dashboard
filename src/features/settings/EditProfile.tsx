@@ -46,7 +46,7 @@ export default function EditProfile() {
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(e) => handleFileChange(e, setLocalAvatar, setStoreAvatar)}
+          onChange={(e) => handleFileChange(e, setLocalAvatar)}
         />
         <button
           onClick={() => fileInputRef.current?.click()}
@@ -70,7 +70,7 @@ export default function EditProfile() {
           } else {
             setErrors([]);
             edit(data);
-
+            setStoreAvatar(localAvatar);
             setIsPopOpen(true);
             setTimeout(() => setIsVisible(true), 10);
           }

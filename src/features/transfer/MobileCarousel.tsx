@@ -26,7 +26,7 @@ export default function MobileCarousel({
               className="block rounded-full w-12.5 h-12.5"
             />
           </button>
-          <span className="pt-3.75 text-xs truncate w-full text-center">
+          <span className="text-text-primary pt-3.75 text-xs truncate w-full text-center">
             {user.name}
           </span>
           <span className="text-grey pt-0.75 text-xs">{user.role}</span>

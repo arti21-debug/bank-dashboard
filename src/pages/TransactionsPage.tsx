@@ -56,8 +56,8 @@ export default function TransactionPage() {
     currPageT,
     pageGroupStart,
     totalPages,
-    currTransPage,
-    setCurrTransPage,
+    currTransPageIndex,
+    setCurrTransPageIndex,
     goNext,
     goPrev,
     reset,
@@ -84,7 +84,7 @@ export default function TransactionPage() {
   }
 
   return (
-    <main>
+    <main className="pb-[env(safe-area-inset-bottom)]">
       <div className="container">
         <section className="flex justify-between pt-6 max-[960px]:flex-row max-[770px]:flex-col max-[770px]:gap-6">
           <div className="flex-2 min-w-0 mr-6 max-[1200px]:max-w-121.75 max-[400px]:w-full">
@@ -132,22 +132,20 @@ export default function TransactionPage() {
               >
                 Expense
               </button>
-              {import.meta.env.DEV && (
-                <button
-                  onClick={() => {
-                    const { first, second } = splitToCardsMockTrans();
-                    addMockTrans(1, first);
-                    addMockTrans(2, second);
+              <button
+                onClick={() => {
+                  const { first, second } = splitToCardsMockTrans();
+                  addMockTrans(1, first);
+                  addMockTrans(2, second);
 
-                    const { firstPart, secondPart } = splitToCardsMockInvests();
-                    addMockInvestments(1, firstPart);
-                    addMockInvestments(2, secondPart);
-                  }}
-                  className="text-text-secondary absolute right-0 cursor-pointer pb-2.75 border-b-3 max-[550px]:static max-[550px]:border-none max-[550px]:p-0"
-                >
-                  + generate data
-                </button>
-              )}
+                  const { firstPart, secondPart } = splitToCardsMockInvests();
+                  addMockInvestments(1, firstPart);
+                  addMockInvestments(2, secondPart);
+                }}
+                className="text-text-secondary absolute right-0 cursor-pointer pb-2.75 border-b-3 max-[550px]:static max-[550px]:border-none max-[550px]:p-0"
+              >
+                + generate data
+              </button>
             </div>
             <div className="relative w-full h-100 mt-6.25 mb-7.5 rounded-2xl bg-bg-block overflow-y-auto max-[550px]:h-75">
               {(transactions?.length ?? 0) > 0 ? (
@@ -238,7 +236,7 @@ export default function TransactionPage() {
                         className="w-8.75 h-8.75 shrink-0"
                       />
                       <div>
-                        <div className="font-medium text-black max-w-37.5">
+                        <div className="font-medium text-text-primary max-w-37.5">
                           {t.description}
                         </div>
                         <div className="whitespace-nowrap text-grey text-xs">
@@ -282,8 +280,8 @@ export default function TransactionPage() {
               return (
                 <button
                   key={pageIndex}
-                  onClick={() => setCurrTransPage(pageIndex)}
-                  className={`cursor-pointer text-[15px] ${pageIndex === currTransPage ? "py-2 px-4 rounded-xl text-white bg-gray-blue max-[1024px]:px-3 -mx-2.75" : "text-gray-blue"} max-[1024px]:text-xs`}
+                  onClick={() => setCurrTransPageIndex(pageIndex)}
+                  className={`cursor-pointer text-[15px] ${pageIndex === currTransPageIndex ? "py-2 px-4 rounded-xl text-white bg-gray-blue max-[1024px]:px-3 -mx-2.75" : "text-gray-blue"} max-[1024px]:text-xs`}
                 >
                   {pageIndex + 1}
                 </button>

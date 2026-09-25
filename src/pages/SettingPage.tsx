@@ -7,7 +7,7 @@ export default function SettingPage() {
   const [activeBlock, setActiveBlock] = useState("profile");
 
   return (
-    <main>
+    <main className="pb-[env(safe-area-inset-bottom)]">
       <div className="container">
         <section className="pt-6 pb-44 w-full">
           <div className="relative bg-bg-block w-full h-auto p-7.5 rounded-3xl">

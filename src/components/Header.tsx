@@ -47,7 +47,7 @@ export default function Header() {
           {/* Burger */}
           <div ref={burgRef} className="relative hidden max-[960px]:block">
             <button
-              className="flex w-[clamp(1.875rem,1.739rem+0.68vw,2.25rem)] flex-col gap-1.5 p-2 cursor-pointer max-[400px]:gap-1"
+              className="flex flex-col gap-1.5 p-2 cursor-pointer max-[400px]:gap-1"
               onClick={() => setIsBurgOpen((prev) => !prev)}
               aria-label={isBurgOpen ? "Close menu" : "Open menu"}
               aria-expanded={isBurgOpen}

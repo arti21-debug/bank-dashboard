@@ -26,7 +26,7 @@ export default function InvestmentsPage() {
     .toLocaleString("en-US");
 
   return (
-    <main>
+    <main className="pb-[env(safe-area-inset-bottom)]">
       <div className="container">
         <section className="flex justify-center flex-wrap gap-7.5 w-full mt-6.5 text-grey">
           {[

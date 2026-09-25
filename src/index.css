@@ -8,9 +8,17 @@
   --text-blue: var(--color-gray-blue);
 }
 
+body, html {
+  background-color: var(--bg);
+}
+
 body {
   font-family: "Inter", sans-serif;
   font-weight: 400;
+}
+
+input, select, textarea {
+  font-size: 16px !important;
 }
 
 .dark {
@@ -57,4 +65,8 @@ svg * {
 
 .recharts-surface {
   outline: none !important;
+}
+
+* {
+  touch-action: manipulation;
 }
