@@ -2,9 +2,12 @@
 
 Адаптивная панель интернет-банка на React и TypeScript: карты, быстрые переводы, история транзакций, счета, инвестиции и настройки пользователя. Это фронтенд-демо: бэкенда нет, все данные хранятся в браузере.
 
-**Демо:** _вставьте ссылку на Vercel_
+**Демо:** https://bank-dashboard-beta-rust.vercel.app/
 
-<!-- Добавьте 2–3 скриншота: десктоп (светлая тема), десктоп (тёмная тема), мобильная версия -->
+![Dashboard-dark](docs/dashboard-dark.png)
+![Dashboard](docs/dashboard.png)
+![Accounts](docs/Accounts.png)
+![Investments](docs/Investments.png)
 
 ## Возможности
 

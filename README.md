@@ -2,9 +2,12 @@
 
 A responsive online-banking dashboard built with React and TypeScript: cards, quick transfers, transaction history, accounts, investments, and user settings. This is a frontend demo: there is no backend, and all data is stored in the browser.
 
-**Demo:** _insert your Vercel link_
+**Demo:** https://bank-dashboard-beta-rust.vercel.app/
 
-<!-- Add 2–3 screenshots: desktop (light theme), desktop (dark theme), mobile -->
+![Dashboard-dark](docs/dashboard-dark.png)
+![Dashboard](docs/dashboard.png)
+![Accounts](docs/Accounts.png)
+![Investments](docs/Investments.png)
 
 ## Features
 
