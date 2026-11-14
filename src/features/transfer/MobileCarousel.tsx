@@ -11,14 +11,16 @@ export default function MobileCarousel({
 }: CarouselProps) {
   return (
     <div className="hidden max-[480px]:flex gap-4 overflow-x-auto snap-x snap-mandatory pt-2 pb-2">
-      {CONTACTS.map((user, i) => (
+      {CONTACTS.map((user) => (
         <div
           key={user.id}
-          onClick={() => setSelectedUser(i)}
+          onClick={() => setSelectedUser(user.id)}
           className="flex-[0_0_38%] snap-center flex flex-col items-center shrink-0"
         >
           <button
-            className={`rounded-full ${i === selectedUser ? "outline-4 outline-green-500" : ""}`}
+            className={`rounded-full ${user.id === selectedUser ? "outline-4 outline-green-500" : ""}`}
+            aria-label={`Send to ${user.name}`}
+            aria-pressed={user.id === selectedUser}
           >
             <img
               src={user.avatar}

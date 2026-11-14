@@ -10,6 +10,7 @@ import ServicesPage from "./pages/ServicesPage";
 import MyPrivilegesPage from "./pages/MyPrivilegesPage";
 import SettingPage from "./pages/SettingPage";
 import { AppLayout } from "./components/AppLayout";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/my-privileges" element={<MyPrivilegesPage />} />
         <Route path="/setting" element={<SettingPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

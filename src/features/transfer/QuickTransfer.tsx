@@ -17,6 +17,7 @@ export default function QuickTransfer({ userAvatars, selectedUser, setSelectedUs
         <button
           className="relative shrink-0 w-12.5 h-12.5 cursor-pointer bg-background-white rounded-full shadow-[0_0_18px_-2px_rgb(231_228_232/80%)] mr-4 max-[1200px]:w-0 max-[1200px]:h-0 transition duration-300 hover:bg-[#e8e8f2] max-[480px]:hidden"
           onClick={() => setCurrUserIndex(currUserIndex - 1)}
+          aria-label="Previous contacts"
         >
           <ChevronLeft
             color="#718EBF"
@@ -35,6 +36,7 @@ export default function QuickTransfer({ userAvatars, selectedUser, setSelectedUs
         <button
           className="relative shrink-0 w-12.5 h-12.5 bg-background-white cursor-pointer rounded-full shadow-[0_0_18px_-2px_rgb(231_228_232/80%)] ml-4 max-[1200px]:w-0 max-[1200px]:h-0 transition duration-300 hover:bg-[#e8e8f2] max-[480px]:hidden"
           onClick={() => setCurrUserIndex(currUserIndex + 1)}
+          aria-label="Next contacts"
         >
           <ChevronRight
             color="#718EBF"

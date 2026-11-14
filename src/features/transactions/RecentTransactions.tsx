@@ -1,4 +1,5 @@
 import { transactionIcons } from "../../config/transactionIcons";
+import { formatSigned } from "../../utils/money";
 
 type RecentTransaction = {
   date: string;
@@ -48,9 +49,7 @@ export default function RecentTransactions({
               <div
                 className={`${tran.amount < 0 ? "text-[#FF4B4A]" : "text-[#41D4A8]"} font-medium shrink-0 max-[1200px]:text-sm`}
               >
-                {tran.amount < 0
-                  ? `-$${String(tran.amount).slice(1)}`
-                  : `+$${tran.amount}`}
+                {formatSigned(tran.amount)}
               </div>
             </li>
           ))}

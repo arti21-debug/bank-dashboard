@@ -10,6 +10,8 @@ import { Moon } from "lucide-react";
 import { Sun } from "lucide-react";
 import { useTheme } from "../hooks/useTheme";
 import { useCardsStore } from "../store/useCardsStore";
+import { getPageTitle, NAV_ITEMS } from "../config/routes";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const [isBurgOpen, setIsBurgOpen] = useState(false);
@@ -17,6 +19,7 @@ export default function Header() {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const burgRef = useRef<HTMLDivElement | null>(null);
 
+  // закрытие бургера по внешнему клику
   useEffect(() => {
     if (!isBurgOpen) return;
 
@@ -26,17 +29,22 @@ export default function Header() {
       }
     };
 
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsBurgOpen(false);
+    }
     document.addEventListener("mousedown", handeClickOutside);
-    return () => document.removeEventListener("mousedown", handeClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handeClickOutside);
+      document.addEventListener("keydown", handleEscape);
+    }
   }, [isBurgOpen]);
 
   const isDark = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const activePage =
-    location.pathname === "/"
-      ? "Overview"
-      : location.pathname.slice(1).replaceAll("-", " ");
+  const activePage = getPageTitle(location.pathname);
 
   const activeAvatar = useCardsStore((state) => state.userAvatar);
 
@@ -67,18 +75,15 @@ export default function Header() {
             </button>
             {isBurgOpen && (
               <ul className="flex flex-col items-center gap-3 absolute z-50 w-40 py-5 rounded-md bg-[#6f7b8e] max-[480px]:w-35 max-[480px]:text-sm max-[480px]:gap-2 max-[480px]:py-3">
-                {Object.entries(NAV_VECTORS).map(([el, _]) => (
-                  <li
-                    key={el}
-                    onClick={() => {
-                      navigate(`/${el !== "Dashboard" ? el : "/"}`);
-                      setIsBurgOpen(false);
-                    }}
-                    className="whitespace-nowrap text-[#B1B1B1]"
-                  >
-                    <button className="cursor-pointer font-base transition duration-300 hover:text-[#ddd8d8]">
-                      {el.replace("-", " ")}
-                    </button>
+                {NAV_ITEMS.map(({ key, path, label }) => (
+                  <li key={key} className="whitespace-nowrap text-[#B1B1B1]">
+                    <Link
+                      to={path}
+                      onClick={() => setIsBurgOpen(false)}
+                      className="cursor-pointer font-base transition duration-300 hover:text-[#ddd8d8]"
+                    >
+                      {label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -94,16 +99,26 @@ export default function Header() {
             <img
               src={`${search}`}
               alt=""
-              className="ml-6.25 cursor-pointer shrink-0 max-[1024px]:w-4"
+              className="ml-6.25 shrink-0 max-[1024px]:w-4"
             />
             <input
               type="text"
-              placeholder="Search for something"
+              disabled
+              title="Coming soon"
+              placeholder="Search (coming soon)"
               className="text-text-primary py-4 px-2 truncate outline-none bg-transparent min-w-0 w-full max-[1024px]:h-10 max-[1100px]:placeholder:text-xs"
             />
           </div>
           <button
-            onClick={() => document.documentElement.classList.toggle("dark")}
+            onClick={() => {
+              const next = !document.documentElement.classList.contains("dark");
+              document.documentElement.classList.toggle("dark");
+              try {
+                localStorage.setItem("theme", next ? "dark" : "light");
+              } catch {
+                // localStorage недоступен (приватный режим) — тема просто не сохранится
+              }
+            }}
             className="w-12.25 h-12.25 relative bg-border-color p-3 rounded-full shrink-0 cursor-pointer max-[1024px]:w-10 max-[1024px]:h-10 transition duration-300 hover:bg-[#e8e8f2] max-[400px]:w-8.75 max-[400px]:h-8.75"
             aria-label={
               isDark ? "Switch to light theme" : "Switch to dark theme"
@@ -122,7 +137,7 @@ export default function Header() {
             )}
           </button>
           <button
-            onClick={() => navigate(`/Setting`)}
+            onClick={() => navigate(`/setting`)}
             className="bg-border-color rounded-full shrink-0 cursor-pointer max-[1024px]:w-10 max-[1024px]:h-10 max-[560px]:hidden transition duration-300 hover:bg-[#e8e8f2]"
             aria-label="Open settings"
           >
@@ -155,7 +170,7 @@ export default function Header() {
             )}
           </div>
           <button
-            onClick={() => navigate(`/Setting`)}
+            onClick={() => navigate(`/setting`)}
             className="ml-1.25 shrink-0 cursor-pointer max-[1024px]:w-11.5 max-[1024px]:h-11.5 max-[400px]:w-8.75 max-[400px]:h-8.75"
             aria-label="Open setting"
           >

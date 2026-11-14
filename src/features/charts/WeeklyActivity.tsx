@@ -19,6 +19,7 @@ interface ActivityProps {
 export default function WeeklyActivity({ activeCard }: ActivityProps) {
   const [fontSize, setFontSize] = useState(13);
 
+  // адаптивный размер
   useEffect(() => {
     const handleResize = () => {
       setFontSize(window.innerWidth <= 440 ? 10 : 13);

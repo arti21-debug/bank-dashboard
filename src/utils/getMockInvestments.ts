@@ -21,20 +21,27 @@ const investments = [
   { name: "Spotify", amount: 3900 },
 ];
 
+// генерирует демо-инвестиции: каждой инвестиции из шаблона назначается
+// случайный год за последние 5 лет, после чего список перемешивается
 export function generateDemoInvest() {
   const newInvestments = investments.map((invest) => {
     const now = Date.now();
+    // 5 лет назад в миллисекундах (високосные годы не учитываются)
     const fiveYearsAgo = now - 365 * 24 * 60 * 60 * 1000 * 5;
+    // случайный момент в диапазоне [fiveYearsAgo, now)
     const randomDate = new Date(
       Math.random() * (now - fiveYearsAgo) + fiveYearsAgo,
     );
 
+    // копия шаблона; в date записывается только год, а не полная дата
     return {
       ...invest,
       date: randomDate.getFullYear(),
     };
   });
 
+  // перемешиваем порядок инвестиций
+  // (sort мутирует newInvestments, но это новый массив из map, шаблон не меняется)
   const arrShuffle = newInvestments.sort(() => Math.random() - 0.5);
   return arrShuffle;
 }

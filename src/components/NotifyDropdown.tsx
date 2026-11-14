@@ -1,6 +1,7 @@
 import { RefObject, useEffect } from "react";
 import { useCardsStore } from "../store/useCardsStore";
 import { transactionIcons } from "../config/transactionIcons";
+import { formatSigned } from "../utils/money";
 
 type NotifyProps = {
   setIsNotifyDropdownOpen: (val: boolean) => void;
@@ -29,12 +30,12 @@ export default function NotifyDropdown({
   const activeCard = cards.find((c) => c.active);
   if (!activeCard) return;
 
-  // recent transaction block - sort latest
+  // сортировка последних 3 транзакций
   const sortedTransactions = [...activeCard.transactions]
     .sort((a, b) => b.date - a.date)
     .slice(0, 3);
 
-  // date from timestamp
+  // перевод в дату от timestamp
   const recentTransactions = sortedTransactions.map((t) => {
     return {
       ...t,
@@ -78,9 +79,7 @@ export default function NotifyDropdown({
               <div
                 className={`${tran.amount < 0 ? "text-[#FF4B4A]" : "text-[#41D4A8]"} font-medium shrink-0 max-[1200px]:text-sm`}
               >
-                {tran.amount < 0
-                  ? `-$${String(tran.amount).slice(1)}`
-                  : `+$${tran.amount}`}
+                {formatSigned(tran.amount)}
               </div>
             </div>
           ))}

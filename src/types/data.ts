@@ -11,6 +11,7 @@ export interface Transaction {
   amount: number;
   date: number;
   status: string;
+  recipientId?: number;
 }
 
 export type Notification = {

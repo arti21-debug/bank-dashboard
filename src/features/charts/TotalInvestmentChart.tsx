@@ -19,6 +19,7 @@ export default function TotalInvestmentChart({
 }: InvestmentChartProps) {
   const [isMobile, setIsMobile] = useState(false);
 
+  // адаптивный размер
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 440 ? true : false);

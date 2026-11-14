@@ -30,10 +30,6 @@ select {
   font-family: inherit;
 }
 
-button:disabled {
-  cursor: default;
-}
-
 /* Typography */
 
 p,

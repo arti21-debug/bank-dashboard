@@ -21,6 +21,7 @@ const monthlyRevenueData = [
 export default function RevenueChart() {
   const [isMobile, setIsMobile] = useState(false);
 
+  // адаптивный размер
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 440 ? true : false);

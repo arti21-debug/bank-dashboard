@@ -42,7 +42,7 @@ export default function BalanceHistory({ activeCard }: BalanceProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 5 последних месяцев до текущего
+  // 7 последних месяцев до текущего
   const currentMonth = new Date().getMonth();
   const closestMonths = Array.from({ length: 7 }, (_, i) => {
     // возврат месяцев в естественном порядке и защита от отрицательных индексов при переходе через январь

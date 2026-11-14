@@ -20,8 +20,10 @@ import vector8 from "../icons/nav-icons/vector-8.svg";
 import vector8Active from "../icons/nav-icons/active/vector-8-active.svg";
 import vector9 from "../icons/nav-icons/vector-9.svg";
 import vector9Active from "../icons/nav-icons/active/vector-9-active.svg";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme";
+import { Link } from "react-router-dom";
+import { isActivePath, NAV_ITEMS } from "../config/routes";
 
 export const NAV_VECTORS = {
   Dashboard: { vector: vector1, active: vector1Active },
@@ -37,48 +39,54 @@ export const NAV_VECTORS = {
 
 export default function Nav() {
   const isDark = useTheme();
-  const navigate = useNavigate();
-
-  const location = useLocation();
-  const activePage =
-    location.pathname === "/" ? "Dashboard" : location.pathname.slice(1);
+  const { pathname } = useLocation();
 
   return (
-    <nav className="bg-bg-block w-[clamp(12.5rem,11.364rem+5.68vw,15.625rem)] pb-10.5 min-h-screen self-stretch max-[1055px]:w-55 max-[960px]:hidden">
+    <nav
+      aria-label="Main"
+      className="bg-bg-block w-[clamp(12.5rem,11.364rem+5.68vw,15.625rem)] pb-10.5 min-h-screen self-stretch max-[1055px]:w-55 max-[960px]:hidden"
+    >
       <ul className="flex flex-col gap-10.5">
         <li className="flex items-center min-h-25">
-          <button className="flex justify-center gap-2.25 px-10">
+          <Link
+            to="/"
+            aria-label="BankDash — go to dashboard"
+            className="flex justify-center gap-2.25 px-10"
+          >
             <img src={`${iconLogo}`} alt="" />
             <img src={isDark ? BankDashLight : BankDash} alt="" />
-          </button>
+          </Link>
         </li>
-        {Object.entries(NAV_VECTORS).map(([el, i]) => (
-          <li
-            onClick={() => {
-              navigate(`/${el !== "Dashboard" ? el : "/"}`);
-            }}
-            key={el}
-            className={`relative flex items-center whitespace-nowrap gap-6.5 px-10.75 max-[840px]:hidden`}
-          >
-            {activePage === el && (
-              <div className="absolute w-1.5 h-15 bg-[#2D60FF] left-0 rounded-full"></div>
-            )}
-            <img
-              src={activePage === el ? i.active : i.vector}
-              alt=""
-              className={`w-6.25 h-6.25 shrink-0 max-[1024px]:w-5 ${activePage === el ? "text-[#2D60FF]" : "text-[#B1B1B1]"}`}
-            />
-            <button
-              className={`font-medium text-lg max-[1024px]:text-base transition duration-300 ${activePage === el ? "text-[#2D60FF] cursor-default" : "text-[#B1B1B1] hover:text-[#ddd8d8] cursor-pointer"}`}
+        {NAV_ITEMS.map(({ key, path, label }) => {
+          const active = isActivePath(pathname, path);
+          const icons = NAV_VECTORS[key];
+          return (
+            <li
+              key={key}
+              className="relative flex items-center max-[840px]:hidden"
             >
-              {el === "Credit-Cards"
-                ? "Credit Cards"
-                : el === "My-Privileges"
-                  ? "My Privileges"
-                  : el}
-            </button>
-          </li>
-        ))}
+              {active && (
+                <div className="absolute w-1.5 h-15 bg-[#2D60FF] left-0 rounded-full"></div>
+              )}
+              <Link
+                to={path}
+                aria-current={active ? "page" : undefined}
+                className="group flex flex-1 items-center whitespace-nowrap gap-6.5 px-10.75"
+              >
+                <img
+                  src={active ? icons.active : icons.vector}
+                  alt=""
+                  className="w-6.25 h-6.25 shrink-0 max-[1024px]:w-5"
+                />
+                <span
+                  className={`font-medium text-lg max-[1024px]:text-base transition duration-300 ${active ? "text-[#2D60FF]" : "text-[#B1B1B1] group-hover:text-[#ddd8d8]"}`}
+                >
+                  {label}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

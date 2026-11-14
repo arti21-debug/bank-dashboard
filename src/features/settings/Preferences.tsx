@@ -15,6 +15,8 @@ export default function Preferences() {
           const data = new FormData(e.target);
           edit(data);
 
+          // сначала монтируем уведомление в начальном (скрытом) состоянии,
+          // а через 10 мс включаем видимость, чтобы сработал CSS-transition
           setIsPopOpen(true);
           setTimeout(() => setIsVisible(true), 10);
         }}
@@ -22,8 +24,9 @@ export default function Preferences() {
       >
         <div className="flex gap-7.5 pt-10.5 text-text-primary max-[1024px]:text-[13px] max-[520px]:flex-col max-[520px]:pt-5.5">
           <div className="flex-1 min-w-0">
-            <label>Currency</label>
+            <label htmlFor="profile-currency">Currency</label>
             <select
+              id="profile-currency"
               name="currency"
               defaultValue={values.currency ?? "USD"}
               className="w-full h-12.5 mt-2.75 px-5 border-2 border-[#DFEAF2] rounded-2xl text-[15px] max-[1024px]:h-10 max-[1024px]:text-xs"
@@ -87,8 +90,9 @@ export default function Preferences() {
           </div>
           <div className="flex flex-col justify-between flex-1 min-w-0">
             <div className="flex flex-col">
-              <label>Time Zone</label>
+              <label htmlFor="profile-time-zone">Time Zone</label>
               <select
+                id="profile-time-zone"
                 name="timezone"
                 defaultValue={
                   values.timeZone ?? "(GMT-12:00) International Date Line West"

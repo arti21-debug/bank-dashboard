@@ -14,12 +14,13 @@ import invoiceIcon2 from "@/icons/accounts-page/invoice-icon-2.svg";
 import invoiceIcon3 from "@/icons/accounts-page/invoice-icon-3.svg";
 import invoiceIcon4 from "@/icons/accounts-page/invoice-icon-4.svg";
 import useTouchTooltip from "../hooks/useTouchTooltip";
+import { formatMoney, formatSigned, round2 } from "../utils/money";
 
 export default function AccountsPage() {
   const cards = useCardsStore((state) => state.cards);
   const switchCard = useCardsStore((state) => state.switchActive);
 
-  // touch tooltip на чарте
+  // тултип по долгому нажатию на мобильных
   const {
     isTooltipOpen,
     handlePointerDown,
@@ -28,16 +29,19 @@ export default function AccountsPage() {
   } = useTouchTooltip();
 
   const activeCard = cards.find((c) => c.active);
+  // цвет отображаемой карты: карта с id 1 — синяя, с id 2 — белая
   const [currCard, setCurrCard] = useState(
     activeCard?.id === 1 ? "light-blue" : "light-white",
   );
   const cardId = currCard === "light-blue" ? 1 : 2;
   if (!activeCard) return;
 
+  // 3 последние транзакции: сортируем копию массива по убыванию даты
   const sortedTransactions = [...activeCard.transactions]
     .sort((a, b) => b.date - a.date)
     .slice(0, 3);
 
+  // форматируем дату для вывода, например "13 November 2026"
   const recentTransactions = sortedTransactions.map((t) => {
     return {
       ...t,
@@ -49,35 +53,44 @@ export default function AccountsPage() {
     };
   });
 
-  const totalBal = activeCard.balance.toLocaleString("en-US");
+  // баланс с разделителями тысяч: 12,345
+  const totalBal = activeCard.balance;
 
-  const income = activeCard.transactions
-    .filter((t) => t.amount > 0)
-    .reduce((sum, el) => sum + el.amount, 0)
-    .toLocaleString("en-US");
+  // доход — сумма всех положительных транзакций
+  const income = round2(
+    activeCard.transactions
+      .filter((t) => t.amount > 0)
+      .reduce((sum, el) => sum + el.amount, 0),
+  );
 
-  const expense = activeCard.transactions
-    .filter((t) => t.amount < 0)
-    .reduce((sum, el) => sum + Math.abs(el.amount), 0)
-    .toLocaleString("en-US");
+  // расход — сумма модулей всех отрицательных транзакций
+  const expense = round2(
+    activeCard.transactions
+      .filter((t) => t.amount < 0)
+      .reduce((sum, el) => sum + Math.abs(el.amount), 0),
+  );
 
-  // вычисление транзакций за последнюю неделю
+  // транзакции за текущую неделю: с полуночи последнего воскресенья до сейчас
   const date = new Date();
+  // getDay(): 0 — воскресенье, 6 — суббота; столько дней прошло с начала недели
   const shift = date.getDay();
 
+  // откатываемся к воскресенью и обнуляем время до 00:00:00.000
   const startOfWeek = new Date(date);
   startOfWeek.setDate(date.getDate() - shift);
   startOfWeek.setHours(0, 0, 0, 0);
 
-  const debitedLastWeek = activeCard.transactions
+  // списания за неделю (сумма модулей отрицательных транзакций)
+  const debitedLastWeek = round2(activeCard.transactions
     .filter((t) => t.amount < 0 && t.date >= startOfWeek.getTime())
     .reduce((sum, el) => sum + Math.abs(el.amount), 0)
-    .toLocaleString("en-US");
+    );
 
-  const creditedLastWeek = activeCard.transactions
+  // зачисления за неделю (сумма положительных транзакций)
+  const creditedLastWeek = round2(activeCard.transactions
     .filter((t) => t.amount > 0 && t.date >= startOfWeek.getTime())
     .reduce((sum, el) => sum + el.amount, 0)
-    .toLocaleString("en-US");
+    );
 
   return (
     <main>
@@ -88,19 +101,19 @@ export default function AccountsPage() {
               icon: balanceIcon,
               bg: "#FFF5D9",
               label: "My Balance",
-              value: `$${totalBal}`,
+              value: formatMoney(totalBal),
             },
             {
               icon: incomeIcon,
               bg: "#E7EDFF",
               label: "Income",
-              value: `$${income}`,
+              value: formatMoney(income),
             },
             {
               icon: expenceIcon,
               bg: "#FFE0EB",
               label: "Expense",
-              value: `$${expense}`,
+              value: formatMoney(expense),
             },
             {
               icon: totalSavingIcon,
@@ -154,7 +167,7 @@ export default function AccountsPage() {
                     >
                       <div className="flex gap-6.25">
                         {transactionIcons.map(
-                          (icon, i) =>
+                          (icon) =>
                             icon.type === tran.category && (
                               <div
                                 key={icon.type}
@@ -186,9 +199,7 @@ export default function AccountsPage() {
                       <div
                         className={`${tran.amount < 0 ? "text-[#FF4B4A]" : "text-[#41D4A8]"} font-medium shrink-0 max-[1200px]:text-sm pr-4 max-[400px]:pr-2`}
                       >
-                        {tran.amount < 0
-                          ? `-$${Math.abs(tran.amount)}`
-                          : `+$${tran.amount}`}
+                        {formatSigned(tran.amount)}
                       </div>
                     </li>
                   ))}
@@ -208,6 +219,7 @@ export default function AccountsPage() {
               </h2>
               <button
                 onClick={() => {
+                  // переключаемся на другую карту: меняем цвет локально и активную карту в сторе
                   const nextId = cardId === 1 ? 2 : 1;
                   setCurrCard(nextId === 1 ? "light-blue" : "light-white");
                   switchCard(nextId);
@@ -240,12 +252,12 @@ export default function AccountsPage() {
                   onPointerLeave={handlePointerCancel}
                 >
                   <div className="truncate">
-                    {`$${debitedLastWeek} Debited & $${creditedLastWeek} Credited in this Week`}
+                    {`${formatMoney(Number(debitedLastWeek))} Debited & ${formatMoney(Number(creditedLastWeek))} Credited in this Week`}
                   </div>
                   <span
                     className={`absolute px-5 bottom-full bg-grey text-white w-55 h-5 text-[10px] rounded-full whitespace-nowrap group-hover:flex ${isTooltipOpen ? "flex justify-center" : "hidden"} group-hover:items-center`}
                   >
-                    {`$${debitedLastWeek} Debited & $${creditedLastWeek} Credited`}
+                    {`$${formatMoney(debitedLastWeek)} Debited & $${formatMoney(creditedLastWeek)} Credited`}
                   </span>
                 </div>
                 <div className="flex gap-6.25">

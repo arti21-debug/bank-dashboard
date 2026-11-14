@@ -151,24 +151,34 @@ const transactions = [
   },
 ];
 
+// возможные статусы демо-транзакций
 const arrStatus = ["Pending", "Completed"];
 
+// генерирует демо-транзакции: каждой транзакции из шаблона назначается
+// новый id, случайная дата за последние 90 дней и случайный статус
 export function generateDemoData() {
   const newTransactions = transactions.map((t) => {
     const now = Date.now();
+    // 90 дней назад в миллисекундах
     const ninetyDaysAgo = now - 90 * 24 * 60 * 60 * 1000;
+    // случайный момент в диапазоне [ninetyDaysAgo, now)
     const randomDate = new Date(
       Math.random() * (now - ninetyDaysAgo) + ninetyDaysAgo,
     );
-    
+
     return {
       ...t,
+      // уникальный id: шаблон используется повторно, поэтому id нельзя копировать
       id: crypto.randomUUID(),
+      // дата хранится как timestamp (мс)
       date: randomDate.getTime(),
+      // случайный статус из arrStatus
       status: arrStatus[Math.floor(Math.random() * arrStatus.length)],
     };
   });
 
+  // перемешиваем порядок транзакций
+  // (sort мутирует newTransactions, но это новый массив из map, шаблон не меняется)
   const arrShuffle = newTransactions.sort(() => Math.random() - 0.5);
   return arrShuffle;
 }

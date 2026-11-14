@@ -6,18 +6,23 @@ import usePopup from "../../hooks/usePopup";
 export default function Security() {
   const [allErrors, setAllErrors] = useState<string[]>([]);
 
-  const edit = useCardsStore((state) => state.editSecurity);
+  const setEnable2fa = useCardsStore((state) => state.setEnable2fa);
   const updatePass = useCardsStore((state) => state.updatePassword);
   const secValues = useCardsStore((state) => state.userSecurity);
   const userValues = useCardsStore((state) => state.userData);
   const { isPopOpen, setIsPopOpen, isVisible, setIsVisible } = usePopup();
 
+  // проверяет обязательные поля и возвращает массив ключей ошибок (пустой — форма валидна)
   const formValidation = (data: FormData) => {
     const errors = [];
     const currPassword = data.get("currPassword");
-    const newPassword = data.get("newPassword");
-    if (currPassword !== userValues.password) errors.push("incorrect password");
-    if (String(newPassword).length < 8) errors.push("min 8 symbols");
+    const newPassword = String(data.get("newPassword") ?? "");
+
+    // пароль не хранится в localStorage, поэтому после перезагрузки
+    // в памяти его нет; проверяем текущий пароль, только если он известен
+    if (userValues.password && currPassword !== userValues.password)
+      errors.push("incorrect password");
+    if (newPassword.length < 8) errors.push("min 8 symbols");
     return errors;
   };
 
@@ -25,19 +30,19 @@ export default function Security() {
     <>
       <form
         onSubmit={(e) => {
+          // отменяем перезагрузку страницы и собираем значения всех полей по их name
           e.preventDefault();
           const data = new FormData(e.target);
           const errorsResult = formValidation(data);
 
           if (errorsResult.length) {
+            // есть ошибки — показываем сообщения, данные не сохраняем
             setAllErrors(errorsResult);
           } else {
             setAllErrors([]);
-            edit(data);
             updatePass(data);
-
-            // открытие popup
-            setIsPopOpen(true);
+            e.currentTarget.reset(); // очистить поля после успеха
+            setIsPopOpen(true); // открытие popup
             setTimeout(() => setIsVisible(true), 10);
           }
         }}
@@ -47,11 +52,20 @@ export default function Security() {
           <div>
             <h3 className="max-[1024px]:text-sm">Two-factor Authentication</h3>
             <div className="flex items-center gap-5 pt-4.75">
-              <label className="relative inline-flex cursor-pointer">
+              <label
+                htmlFor="profile-2fa"
+                className="relative inline-flex cursor-pointer"
+              >
                 <input
+                  id="profile-2fa"
                   type="checkbox"
-                  name="enable2fa"
-                  defaultChecked={secValues.enable2fa ?? false}
+                  aria-label="Two-factor authentication"
+                  checked={secValues.enable2fa}
+                  onChange={(e) => {
+                    setEnable2fa(e.target.checked);
+                    setIsPopOpen(true);
+                    setTimeout(() => setIsVisible(true), 10);
+                  }}
                   className="peer sr-only"
                 />
                 <span className="h-7.5 w-14 rounded-full bg-text-secondary transition-colors peer-checked:bg-[#16DBCC] max-[1024px]:h-6 max-[1024px]:w-11" />
@@ -68,7 +82,10 @@ export default function Security() {
             </h3>
             <div className="pt-4">
               <div className="flex items-center justify-between">
-                <label className="max-[1024px]:text-[13px]">
+                <label
+                  htmlFor="profile-curr-password"
+                  className="max-[1024px]:text-[13px]"
+                >
                   Current Password
                 </label>
                 {allErrors.includes("incorrect password") && (
@@ -78,6 +95,7 @@ export default function Security() {
                 )}
               </div>
               <input
+                id="profile-curr-password"
                 type="password"
                 name="currPassword"
                 className="w-full h-12.5 py-4 px-5 mt-2.75 border-2 border-[#DFEAF2] rounded-2xl text-[15px] max-[1024px]:h-10 max-[1024px]:text-xs"
@@ -87,7 +105,12 @@ export default function Security() {
           </div>
           <div className="pt-5.5">
             <div className="flex items-center justify-between">
-              <label className="max-[1024px]:text-[13px]">New Password</label>
+              <label
+                htmlFor="profile-password"
+                className="max-[1024px]:text-[13px]"
+              >
+                New Password
+              </label>
               {allErrors.includes("min 8 symbols") && (
                 <div className="text-red-700 font-medium text-sm max-[1024px]:text-xs">
                   min 8 symbols
@@ -95,6 +118,7 @@ export default function Security() {
               )}
             </div>
             <input
+              id="profile-password"
               type="password"
               name="newPassword"
               className="w-full h-12.5 py-4 px-5 mt-2.75 border-2 border-[#DFEAF2] rounded-2xl text-[15px] max-[1024px]:h-10 max-[1024px]:text-xs"

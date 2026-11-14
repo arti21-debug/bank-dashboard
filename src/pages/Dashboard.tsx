@@ -30,18 +30,18 @@ export default function Dashboard() {
   const [amountValue, setAmountValue] = useState("");
 
   const cards = useCardsStore((state) => state.cards);
-  const { handleMakeTransfer, error, setError, isPopOpen, isVisible } =
+  const { handleMakeTransfer, error, setError, isPopOpen, isVisible, popupKind } =
     useMakeTransfer(selectedUser, amountValue, setAmountValue, cards);
 
   const activeCard = cards.find((c) => c.active);
   if (!activeCard) return;
 
-  // recent transaction block - sort latest
+  // 3 последние транзакции: сортируем копию массива по убыванию даты
   const sortedTransactions = [...activeCard.transactions]
     .sort((a, b) => b.date - a.date)
     .slice(0, 3);
 
-  // date from timestamp
+  // форматируем дату для вывода, например "13 November 2026"
   const recentTransactions = sortedTransactions.map((t) => {
     return {
       ...t,
@@ -127,13 +127,15 @@ export default function Dashboard() {
                     <input
                       onChange={(e) => {
                         const value = e.target.value;
-                        if (!/^\d*\.?\d*$/.test(value) || value.startsWith("."))
+                        // валидация суммы
+                        if (!/^\d*(\.\d{0,2})?$/.test(value) || value.startsWith("."))
                           return;
 
                         setError(null);
                         setAmountValue(e.target.value);
                       }}
                       value={amountValue}
+                      inputMode="decimal"
                       placeholder="525.50"
                       className="w-full h-12.5 bg-[#EDF1F7] rounded-full pl-7.5 pr-31.75 outline-none max-[1200px]:placeholder:text-sm max-[1200px]:pr-22 max-[1024px]:h-10 max-[400px]:placeholder:opacity-0"
                     />
@@ -152,7 +154,7 @@ export default function Dashboard() {
                         />
                       </div>
                     </button>
-                    {error && (
+                    {popupKind === "error" && (
                       <div className="absolute text-red-500 text-xs pt-1">
                         {error}
                       </div>

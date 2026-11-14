@@ -10,19 +10,23 @@ import arrPagRight from "@/icons/transactions-page/arr-pag-right.svg";
 import { generateDemoData } from "../utils/getMockTransactions";
 import usePagination from "../hooks/usePagination";
 import { generateDemoInvest } from "../utils/getMockInvestments";
+import { formatSigned } from "../utils/money";
 
-// функция под нужный формат даты из timestamp
+// форматирует timestamp в вид "05 Nov, 2.30 PM"
 function formatDate(timestamp: number) {
   const date = new Date(timestamp);
 
+  // день двумя цифрами: "05"
   const day = date.toLocaleString("en-US", {
     day: "2-digit",
   });
 
+  // короткое название месяца: "Nov"
   const month = date.toLocaleString("en-US", {
     month: "short",
   });
 
+  // время в 12-часовом формате: "2:30 PM" → разделитель меняем на точку: "2.30 PM"
   const time = date
     .toLocaleString("en-US", {
       hour: "numeric",
@@ -43,7 +47,7 @@ export default function TransactionPage() {
   const addMockTrans = useCardsStore((state) => state.addMockTransactions);
   const addMockInvestments = useCardsStore((state) => state.addMockInvestments);
 
-  // фильтрация транзакций и затем сортировка по recent
+  // фильтр по вкладке: все / только доходы (amount > 0) / только расходы (amount < 0)
   const transactions =
     activeTransactions === "all"
       ? activeCard?.transactions
@@ -51,7 +55,9 @@ export default function TransactionPage() {
         ? activeCard?.transactions.filter((t) => t.amount > 0)
         : activeCard?.transactions.filter((t) => t.amount < 0);
 
+  // сортируем копию по убыванию даты (сначала новые), чтобы не мутировать стор
   const latestTrans = [...(transactions ?? [])].sort((a, b) => b.date - a.date);
+  // пагинация по 5 транзакций на страницу и по 5 номеров страниц в группе
   const {
     currPageT,
     pageGroupStart,
@@ -65,6 +71,7 @@ export default function TransactionPage() {
 
   if (!activeCard) return;
 
+  // генерирует демо-транзакции и делит их пополам: первая половина — карте 1, вторая — карте 2
   function splitToCardsMockTrans() {
     const data = generateDemoData();
     const arr = Math.ceil(data.length / 2);
@@ -74,6 +81,7 @@ export default function TransactionPage() {
     return { first, second };
   }
 
+  // то же самое для демо-инвестиций
   function splitToCardsMockInvests() {
     const investments = generateDemoInvest();
     const arrInvests = Math.ceil(investments.length / 2);
@@ -132,6 +140,7 @@ export default function TransactionPage() {
               >
                 Expense
               </button>
+              {/* генерация демо-данных: транзакции и инвестиции делятся между картами 1 и 2 */}
               <button
                 onClick={() => {
                   const { first, second } = splitToCardsMockTrans();
@@ -204,12 +213,10 @@ export default function TransactionPage() {
                         <td
                           className={`px-4 py-4.5 font-medium whitespace-nowrap ${t.amount > 0 ? "text-[#16DBAA]" : "text-[#FE5C73]"}`}
                         >
-                          {t.amount > 0
-                            ? `+$${t.amount}`
-                            : `-$${Math.abs(t.amount)}`}
+                          {formatSigned(t.amount)}
                         </td>
                         <td className="pl-4 pr-7.5 py-4.5">
-                          <button className="text-[#123288] py-2 px-3.5 max-[1024px]:px-3 rounded-full border border-[#123288] whitespace-nowrap text-sm cursor-pointer max-[1024px]:text-xs">
+                          <button disabled title="Coming soon" className="text-[#123288] py-2 px-3.5 max-[1024px]:px-3 rounded-full border border-[#123288] cursor-not-allowed whitespace-nowrap text-sm max-[1024px]:text-xs">
                             Download
                           </button>
                         </td>
@@ -247,9 +254,7 @@ export default function TransactionPage() {
                     <div
                       className={`font-medium whitespace-nowrap ${t.amount > 0 ? "text-[#16DBAA]" : "text-[#FE5C73]"}`}
                     >
-                      {t.amount > 0
-                        ? `+$${t.amount}`
-                        : `-$${Math.abs(t.amount)}`}
+                      {formatSigned(t.amount)}
                     </div>
                   </div>
                 ))}
@@ -271,6 +276,7 @@ export default function TransactionPage() {
               <div>Previous</div>
             </button>
           )}
+          {/* номера страниц текущей группы: до 5 штук, но не больше оставшихся страниц */}
           {Array.from(
             {
               length: Math.min(5, Math.max(0, totalPages - pageGroupStart)),
@@ -283,12 +289,14 @@ export default function TransactionPage() {
                   onClick={() => setCurrTransPageIndex(pageIndex)}
                   className={`cursor-pointer text-[15px] ${pageIndex === currTransPageIndex ? "py-2 px-4 rounded-xl text-white bg-gray-blue max-[1024px]:px-3 -mx-2.75" : "text-gray-blue"} max-[1024px]:text-xs`}
                 >
+                  {/* индекс с нуля, номер для пользователя — с единицы */}
                   {pageIndex + 1}
                 </button>
               );
             },
           )}
 
+          {/* "Next" показывается, только если после текущей группы есть ещё страницы */}
           {pageGroupStart + 5 < totalPages && (
             <button
               onClick={() => goNext()}

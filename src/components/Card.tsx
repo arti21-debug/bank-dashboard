@@ -3,6 +3,7 @@ import masterCard from "@/icons/card-icons/master-card.svg";
 import Chip_Card_2 from "@/icons/card-icons/Chip_Card-2.svg";
 import masterCard_2 from "@/icons/card-icons/master-card-2.svg";
 import { useCardsStore } from "../store/useCardsStore";
+import { formatMoney } from "../utils/money";
 
 interface ColorProps {
   color: string;
@@ -15,37 +16,36 @@ export default function Card({ color }: ColorProps) {
   const switchCard = useCardsStore((state) => state.switchActive);
   const activeCard = cards.find((c) => c.active);
 
+  const card = cards.find((c) => c.id === cardId);
+
   const activeCardBorderStyle =
     (activeCard?.id === 1 && color === "blue") ||
     (activeCard?.id === 2 && color === "white")
       ? "border-4 border-green-500"
       : "";
 
+  const isInteractive = color !== "light-blue" && color !== "light-white";
+
   return (
     <article
-      onClick={() =>
-        color !== "light-blue" && color !== "light-white" && switchCard(cardId)
-      }
+      onClick={() => isInteractive && switchCard(cardId)}
+      onKeyDown={(e) => {
+        if (isInteractive && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          switchCard(cardId);
+        }
+      }}
       className={`font-lato text-xs w-full h-58.75 overflow-auto ${color === "blue" || color === "light-blue" ? "bg-linear-to-b from-[#4C49ED] to-[#0A06F4] text-white" : "bg-[white] text-dark-blue"} rounded-3xl leading-none ${color === "light-blue" || color === "light-white" ? "cursor-default border-none" : `cursor-pointer max-[1035px]:w-57 ${activeCardBorderStyle}`} max-[1200px]:h-42.5 max-[1035px]:shrink-0`}
-      role="button"
-      tabIndex={0}
-      aria-label="Bank card"
+      role={isInteractive ? "button" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      aria-pressed={isInteractive ? activeCard?.id === cardId : undefined}
+      aria-label={isInteractive ? `Select card ${cardId}` : undefined}
     >
       <div className="flex items-end-safe justify-between">
         <div className="pt-6 px-6.5">
           <div className="max-[1200px]:text-[11px]">Balance</div>
           <div className="text-xl font-semibold max-[1200px]:text-base">
-            {`$${
-              color === "blue"
-                ? cards[0].balance?.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                : cards[1].balance?.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-            }`}
+            {formatMoney(card?.balance ?? 0)}
           </div>
         </div>
         <img
@@ -72,7 +72,7 @@ export default function Card({ color }: ColorProps) {
             VALID THRU
           </div>
           <div className="text-base font-semibold max-[1200px]:text-[13px] whitespace-nowrap">
-            12/22
+            12/29
           </div>
         </div>
       </div>

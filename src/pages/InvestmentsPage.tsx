@@ -15,11 +15,13 @@ export default function InvestmentsPage() {
   const activeCard = cards.find((c) => c.active);
   if (!activeCard) return;
 
+  // общая сумма инвестиций
   const totalInvestments = cards
     .map((card) => card.investments.reduce((sum, el) => sum + el.amount, 0))
     .reduce((sum, el) => sum + el, 0)
     .toLocaleString("en-US");
 
+  // количество инвестиций 
   const amountOfInvestment = cards
     .map((card) => card.investments.length)
     .reduce((sum, el) => sum + el, 0)

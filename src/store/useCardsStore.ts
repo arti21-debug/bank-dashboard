@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import {
   Card,
   Investment,
@@ -8,13 +8,15 @@ import {
   UserPreferences,
   UserSecurity,
 } from "../types/data";
+import { round2 } from "../utils/money";
 
+// типизация стора: данные пользователя, карты и экшены для их изменения
 interface CardsStore {
   cards: Card[];
   userData: UserData;
   userPreferences: UserPreferences;
   userSecurity: UserSecurity;
-  userAvatar: string | null;
+  userAvatar: string | null; // аватар в base64; null — используется картинка по умолчанию
   switchActive: (id: number) => void;
   makeTransfer: (cardId: number | undefined, t: Transaction) => void;
   addMockTransactions: (
@@ -27,13 +29,28 @@ interface CardsStore {
   ) => void;
   editProfile: (data: FormData) => void;
   editPreferences: (data: FormData) => void;
-  editSecurity: (data: FormData) => void;
   updatePassword: (data: FormData) => void;
   setAvatar: (base64: string) => void;
+  setEnable2fa: (enable: boolean) => void;
 }
 
+// Безопасная обёртка localStorage для сохранения состояния
+const safeStorage = createJSONStorage(() => ({
+  getItem: (k) => localStorage.getItem(k),
+  setItem: (k, v) => {
+    try {
+      localStorage.setItem(k, v);
+    } catch (e) {
+      console.error("Persist failed (quota?)", e);
+    }
+  },
+  removeItem: (k) => localStorage.removeItem(k),
+}));
+
+// глобальный стор; persist сохраняет состояние в localStorage и восстанавливает при перезагрузке
 export const useCardsStore = create<CardsStore>()(
   persist(
+    // начальное состояние: две карты, активна первая
     (set) => ({
       cards: [
         {
@@ -53,6 +70,7 @@ export const useCardsStore = create<CardsStore>()(
           active: false,
         },
       ],
+      // профиль пользователя (заполняется на странице настроек)
       userData: {
         name: "",
         username: "",
@@ -65,6 +83,7 @@ export const useCardsStore = create<CardsStore>()(
         postalCode: "",
         country: "",
       },
+      // настройки валюты, часового пояса и уведомлений
       userPreferences: {
         currency: "USD",
         timeZone: "(GMT-12:00) International Date Line West",
@@ -79,6 +98,7 @@ export const useCardsStore = create<CardsStore>()(
       },
       userAvatar: null,
 
+      // делает активной карту с переданным id, остальные — неактивными
       switchActive: (id) =>
         set((state) => ({
           cards: state.cards.map((card) => ({
@@ -87,19 +107,24 @@ export const useCardsStore = create<CardsStore>()(
           })),
         })),
 
+      // добавляет транзакцию перевода к карте и списывает сумму с её баланса
       makeTransfer: (cardId, t) =>
         set((state) => ({
           cards: state.cards.map((card) =>
             card.id === cardId
               ? {
                   ...card,
-                  transactions: [...card.transactions, t],
-                  balance: card.balance - t.amount,
+                  transactions: [
+                    ...card.transactions,
+                    { ...t, amount: -t.amount },
+                  ],
+                  balance: round2(card.balance - t.amount), // округляем после вычитания
                 }
               : card,
           ),
         })),
 
+      // дописывает демо-транзакции к карте (баланс не меняется)
       addMockTransactions: (cardId, mockTrans) =>
         set((state) => ({
           cards: state.cards.map((card) =>
@@ -112,6 +137,7 @@ export const useCardsStore = create<CardsStore>()(
           ),
         })),
 
+      // дописывает демо-инвестиции к карте
       addMockInvestments: (cardId, mockInvests) =>
         set((state) => ({
           cards: state.cards.map((card) =>
@@ -124,6 +150,8 @@ export const useCardsStore = create<CardsStore>()(
           ),
         })),
 
+      // перезаписывает профиль значениями из формы;
+      // отсутствующее в форме поле (get вернул null) становится пустой строкой
       editProfile: (data) => {
         set((state) => ({
           userData: {
@@ -131,7 +159,6 @@ export const useCardsStore = create<CardsStore>()(
             name: String(data.get("name") ?? ""),
             username: String(data.get("username") ?? ""),
             email: String(data.get("email") ?? ""),
-            password: String(data.get("password") ?? ""),
             birthDate: String(data.get("birthDate") ?? ""),
             presentAddress: String(data.get("presentAddress") ?? ""),
             permanentAddress: String(data.get("permanentAddress") ?? ""),
@@ -142,6 +169,7 @@ export const useCardsStore = create<CardsStore>()(
         }));
       },
 
+      // обновляет настройки: если поля нет в форме, остаётся текущее значение
       editPreferences: (data) => {
         set((state) => ({
           userPreferences: {
@@ -152,6 +180,8 @@ export const useCardsStore = create<CardsStore>()(
             timeZone: String(
               data.get("timezone") ?? state.userPreferences.timeZone,
             ),
+            // отмеченный чекбокс приходит в FormData как "on",
+            // неотмеченный не приходит вовсе → false
             notification: {
               sendOrReceiveCurrency: data.get("sendOrReceiveCurrency") === "on",
               receiveOrder: data.get("receiveOrder") === "on",
@@ -161,14 +191,10 @@ export const useCardsStore = create<CardsStore>()(
         }));
       },
 
-      editSecurity: (data) => {
-        set({
-          userSecurity: {
-            enable2fa: data.get("enable2fa") === "on",
-          },
-        });
-      },
+      // включение/выключение 2FA по чекбоксу
+      setEnable2fa: (enable) => set({ userSecurity: { enable2fa: enable } }),
 
+      // меняет только пароль, остальной профиль не трогает
       updatePassword: (data) => {
         set((state) => ({
           userData: {
@@ -178,10 +204,14 @@ export const useCardsStore = create<CardsStore>()(
         }));
       },
 
+      // сохраняет аватар (base64-строка из выбранного файла)
       setAvatar: (data) => set({ userAvatar: data }),
     }),
     {
-      name: "cards",
+      // ключ в localStorage
+      name: "cards", storage: safeStorage,
+      // в localStorage сохраняется всё, кроме пароля:
+      // вырезаем password из userData перед записью
       partialize: (state) => {
         const { userData, ...rest } = state;
         const { password, ...safeUserData } = userData;

@@ -4,35 +4,39 @@ import { CircleCheck } from "lucide-react";
 
 import profilePicBigSetting from "@/icons/setting-page/profilePic-big-setting.svg";
 import pencilEditSetting from "@/icons/setting-page/pencil-edit-setting.svg";
-import { handleFileChange } from "../../utils/setFileChange";
+import { fileToAvatar } from "../../utils/setFileChange";
 import usePopup from "../../hooks/usePopup";
 
 export default function EditProfile() {
   const [errors, setErrors] = useState<string[]>([]);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // аватар из стора; если его ещё нет — картинка по умолчанию
   const avatar = useCardsStore((state) => state.userAvatar);
+  // локальная копия аватара: новое фото сразу видно в превью,
+  // но в стор попадает только после успешного сохранения формы
   const [localAvatar, setLocalAvatar] = useState(
     avatar ?? profilePicBigSetting,
   );
   const setStoreAvatar = useCardsStore((state) => state.setAvatar);
 
+  // текущие данные профиля — используются как значения полей по умолчанию
   const values = useCardsStore((state) => state.userData);
   const edit = useCardsStore((state) => state.editProfile);
   const { isPopOpen, setIsPopOpen, isVisible, setIsVisible } = usePopup();
 
+  // проверяет обязательные поля и возвращает массив ключей ошибок (пустой — форма валидна)
   function formValidation(data: FormData) {
     const name = String(data.get("name"));
     const username = String(data.get("username"));
     const email = String(data.get("email"));
-    const password = String(data.get("password"));
     const emailExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const errorsArr = [];
     if (name.trim() === "") errorsArr.push("type your name");
     if (username.trim() === "") errorsArr.push("type your username");
     if (!emailExp.test(email)) errorsArr.push("type valid email");
-    if (password.trim().length < 8) errorsArr.push("type valid password");
 
     return errorsArr;
   }
@@ -40,13 +44,30 @@ export default function EditProfile() {
   return (
     <div className="flex gap-13.25 pt-13 max-[600px]:flex-col max-[600px]:items-center">
       <div className="relative flex w-32.5 h-fit">
+        {/* превью аватара (локальное, до сохранения) */}
         <img src={`${localAvatar}`} alt="" className="shrink-0 rounded-full" />
+        {/* скрытый выбор файла: выбранное изображение записывается в localAvatar */}
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(e) => handleFileChange(e, setLocalAvatar)}
+          onChange={async (e) => {
+            const input = e.currentTarget;
+            const file = input.files?.[0];
+            if (!file) return;
+
+            try {
+              setAvatarError(null);
+              setLocalAvatar(await fileToAvatar(file)); // сжатый JPEG 256×256
+            } catch (err) {
+              setAvatarError(
+                err instanceof Error ? err.message : "Cannot load image",
+              );
+            } finally {
+              input.value = ""; // позволяет выбрать тот же файл повторно
+            }
+          }}
         />
         <button
           onClick={() => fileInputRef.current?.click()}
@@ -58,19 +79,32 @@ export default function EditProfile() {
             className="absolute inset-0 m-auto max-[1024px]:w-3 max-[1024px]:h-3"
           />
         </button>
+        {avatarError && (
+          <div
+            role="alert"
+            className="absolute top-full mt-2 w-max max-w-48 text-xs font-medium text-red-700"
+          >
+            {avatarError}
+          </div>
+        )}
       </div>
       <form
         onSubmit={(e) => {
+          // отменяем перезагрузку страницы и собираем значения всех полей по их name
           e.preventDefault();
           const data = new FormData(e.target);
           const errorsResult = formValidation(data);
 
           if (errorsResult.length) {
+            // есть ошибки — показываем сообщения, данные не сохраняем
             setErrors(errorsResult);
           } else {
+            // всё валидно: сбрасываем ошибки, сохраняем профиль и аватар в стор
             setErrors([]);
             edit(data);
             setStoreAvatar(localAvatar);
+            // сначала монтируем уведомление в начальном (скрытом) состоянии,
+            // а через 10 мс включаем видимость, чтобы сработал CSS-transition
             setIsPopOpen(true);
             setTimeout(() => setIsVisible(true), 10);
           }
@@ -79,13 +113,14 @@ export default function EditProfile() {
       >
         <div className="flex flex-col gap-5.5 flex-1 min-w-0">
           <div>
-            <label>Your Name</label>
+            <label htmlFor="profile-name">Your Name</label>
             <div
               className={`${errors.includes("type your name") ? "block" : "invisible"} font-medium text-sm mt-0.5 text-red-700 max-[1024px]:text-xs`}
             >
               type your name
             </div>
             <input
+              id="profile-name"
               type="text"
               name="name"
               defaultValue={values.name}
@@ -94,13 +129,14 @@ export default function EditProfile() {
             />
           </div>
           <div>
-            <label>Email</label>
+            <label htmlFor="profile-email">Email</label>
             <div
               className={`${errors.includes("type valid email") ? "block" : "invisible"} font-medium text-sm mt-0.5 text-red-700 max-[1024px]:text-xs`}
             >
               type valid email
             </div>
             <input
+              id="profile-email"
               type="email"
               name="email"
               defaultValue={values.email}
@@ -109,8 +145,9 @@ export default function EditProfile() {
             />
           </div>
           <div>
-            <label>Date of Birth</label>
+            <label htmlFor="profile-birth-date">Date of Birth</label>
             <input
+              id="profile-birth-date"
               type="text"
               name="birthDate"
               defaultValue={values.birthDate}
@@ -119,8 +156,9 @@ export default function EditProfile() {
             />
           </div>
           <div>
-            <label>Permanent Address</label>
+            <label htmlFor="profile-perm-address">Permanent Address</label>
             <input
+              id="profile-perm-address"
               type="text"
               name="permanentAddress"
               defaultValue={values.permanentAddress}
@@ -129,8 +167,9 @@ export default function EditProfile() {
             />
           </div>
           <div>
-            <label>Postal Code</label>
+            <label htmlFor="profile-postal-code">Postal Code</label>
             <input
+              id="profile-postal-code"
               type="text"
               name="postalCode"
               defaultValue={values.postalCode}
@@ -141,13 +180,14 @@ export default function EditProfile() {
         </div>
         <div className="flex flex-col gap-5.5 flex-1 min-w-0">
           <div>
-            <label>User Name</label>
+            <label htmlFor="profile-username">User Name</label>
             <div
               className={`${errors.includes("type your username") ? "block" : "invisible"} font-medium text-sm pt-0.5 text-red-700 max-[1024px]:text-xs`}
             >
               type your username
             </div>
             <input
+              id="profile-username"
               type="text"
               name="username"
               defaultValue={values.username}
@@ -156,13 +196,14 @@ export default function EditProfile() {
             />
           </div>
           <div>
-            <label>Password</label>
+            <label htmlFor="profile-password">Password</label>
             <div
               className={`${errors.includes("type valid password") ? "block" : "invisible"} font-medium text-sm pt-0.5 text-red-700 max-[1024px]:text-xs`}
             >
               invalid password
             </div>
             <input
+              id="profile-password"
               type="password"
               name="password"
               defaultValue={values.password}
@@ -171,8 +212,9 @@ export default function EditProfile() {
             />
           </div>
           <div>
-            <label>Present Address</label>
+            <label htmlFor="profile-present-address">Present Address</label>
             <input
+              id="profile-present-address"
               type="text"
               name="presentAddress"
               defaultValue={values.presentAddress}
@@ -181,8 +223,9 @@ export default function EditProfile() {
             />
           </div>
           <div>
-            <label>City</label>
+            <label htmlFor="profile-city">City</label>
             <input
+              id="profile-city"
               type="text"
               name="city"
               defaultValue={values.city}
@@ -191,8 +234,9 @@ export default function EditProfile() {
             />
           </div>
           <div>
-            <label>Country</label>
+            <label htmlFor="profile-country">Country</label>
             <input
+              id="profile-country"
               type="text"
               name="country"
               defaultValue={values.country}
