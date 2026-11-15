@@ -82,4 +82,4 @@ This is a portfolio demo, not a production banking application.
 
 ## Possible Next Steps
 
-A backend API with real authentication; a money model in integer cents and a balance computed from transactions; code splitting with `React.lazy`, WOFF2 fonts, and optimized avatars; `typescript-eslint`; forms with react-hook-form and zod; full ARIA markup for tabs and accessible charts.
+A backend API with real authentication; a money model in integer cents and a balance computed from transactions; `typescript-eslint`; forms with react-hook-form and zod; full ARIA markup for tabs and accessible charts.

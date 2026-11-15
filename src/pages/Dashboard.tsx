@@ -30,7 +30,7 @@ export default function Dashboard() {
   const [amountValue, setAmountValue] = useState("");
 
   const cards = useCardsStore((state) => state.cards);
-  const { handleMakeTransfer, error, setError, isPopOpen, isVisible, popupKind } =
+  const { handleMakeTransfer, error, setError, isPopOpen, isVisible, popupKind, popupMessage } =
     useMakeTransfer(selectedUser, amountValue, setAmountValue, cards);
 
   const activeCard = cards.find((c) => c.active);
@@ -154,7 +154,7 @@ export default function Dashboard() {
                         />
                       </div>
                     </button>
-                    {popupKind === "error" && (
+                    {error && (
                       <div className="absolute text-red-500 text-xs pt-1">
                         {error}
                       </div>
@@ -182,18 +182,18 @@ export default function Dashboard() {
               : "opacity-0 scale-95 translate-y-2"
           }`}
         >
-          {error ? (
+          {popupKind === "error" ? (
             <>
               <CircleAlert color="#f81616" />
               <div className="font-bold text-red-500 text-sm">
-                Not enough funds
+                {popupMessage}
               </div>
             </>
           ) : (
             <>
               <CircleCheck color="#12d929" />
               <div className="font-bold text-green-500 text-sm">
-                Transfer success
+                {popupMessage}
               </div>
             </>
           )}

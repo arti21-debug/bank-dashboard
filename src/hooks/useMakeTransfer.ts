@@ -13,13 +13,15 @@ export default function useMakeTransfer(
 ) {
   const [error, setError] = useState<string | null>(null);
   const [popupKind, setPopupKind] = useState<"success" | "error">("success");
+  const [popupMessage, setPopupMessage] = useState("Transfer success");
   const activeCard = cards.find((c) => c.active);
   const makeTransfer = useCardsStore((state) => state.makeTransfer);
   const { isPopOpen, setIsPopOpen, isVisible, setIsVisible } = usePopup();
 
   // показываем попап: сначала монтируем скрытым, через 10 мс включаем видимость
-  const showPopup = (kind: "success" | "error") => {
+  const showPopup = (kind: "success" | "error", message: string) => {
     setPopupKind(kind);
+    setPopupMessage(message);
     setIsPopOpen(true);
     setTimeout(() => setIsVisible(true), 10);
   };
@@ -38,8 +40,8 @@ export default function useMakeTransfer(
     );
     if (!result.ok) {
       setError(result.error);
-      // нехватка средств дополнительно показывается попапом
-      if (result.error === "Not enough funds") showPopup("error");
+      // любая ошибка валидации дополнительно показывается попапом
+      showPopup("error", result.error);
       return;
     }
 
@@ -54,8 +56,16 @@ export default function useMakeTransfer(
       date: Date.now(), // время перевода в миллисекундах
       status: "Completed",
     });
-    showPopup("success");
+    showPopup("success", "Transfer success");
   };
 
-  return { handleMakeTransfer, error, setError, isPopOpen, isVisible, popupKind };
+  return {
+    handleMakeTransfer,
+    error,
+    setError,
+    isPopOpen,
+    isVisible,
+    popupKind,
+    popupMessage,
+  };
 }
