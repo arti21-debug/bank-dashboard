@@ -176,7 +176,7 @@ export default function Dashboard() {
       </main>
       {isPopOpen && (
         <div
-          className={`flex items-center justify-between fixed top-10 right-10 z-50 w-50 h-10 p-5 rounded-full bg-white transition-all duration-300 ease-out ${
+          className={`flex items-center gap-4 fixed top-10 right-10 z-50 w-50 h-10 p-5 rounded-full bg-white transition-all duration-300 ease-out ${
             isVisible
               ? "opacity-100 scale-100 translate-y-0"
               : "opacity-0 scale-95 translate-y-2"
