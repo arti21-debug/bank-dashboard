@@ -16,7 +16,7 @@ A responsive online-banking dashboard built with React and TypeScript: cards, qu
 - **Transactions:** All / Income / Expense filters, a paginated table (a card list on mobile), and a monthly expenses chart.
 - **Accounts and investments:** balance, income and expense totals, debit and credit overview, investment charts.
 - **Settings:** profile with avatar upload (cropped and compressed in the browser), preferences, a two-factor authentication toggle, password change.
-- **Dark theme** (remembered between visits) and a layout adapted down to 320 px.
+- **Dark theme** (remembered between visits) and adapted layout.
 - **Demo data:** the "+ generate data" button on the Transactions page fills both cards with sample transactions and investments.
 
 ## Tech Stack
